@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+    postgresql-database:
+        container_name: "database_clinica"
+        image: postgres:14.1-alpine
+        restart: always
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=MiGataSeLlamaGata
+            - POSTGRES_DB=ClinicaVeterinariaTFG
+        volumes:
+            - database_clinica:/var/lib/postgresql/data
+
+    clinicaveterinaria.api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: "clinica_veterinaria"
+        ports:
+            - '1707:80'
+        depends_on:
+            - postgresql-database
+
+volumes:
+    database_clinica:
