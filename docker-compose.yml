@@ -21,6 +21,10 @@ services:
             - '1707:80'
         depends_on:
             - postgresql-database
+        #environment:
+        #    - ASPNETCORE_Kestrel__Endpoints__Https__Url=https://+:443;CertificatePath=/https/aspnetapp.pfx;CertificatePassword=YourPassword
+        #volumes:
+        #    - ./aspnetapp.pfx:/https/aspnetapp.pfx
 
 volumes:
     database_clinica:

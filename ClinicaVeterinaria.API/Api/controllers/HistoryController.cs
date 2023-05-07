@@ -82,7 +82,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         }
 
         [HttpPost("ailment/{id}")]
-        public IResult AddAilmentTreatment(Guid id, [FromBody] string ailment, [FromBody] string treatment)
+        public IResult AddAilmentTreatment(Guid id, [FromHeader] string ailment, [FromBody] string treatment)
         {
             var task = Service.AddAilmentTreatment(id, ailment, treatment);
             task.Wait();

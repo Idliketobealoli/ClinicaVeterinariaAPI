@@ -100,38 +100,16 @@ namespace ClinicaVeterinaria.API.Api.services
 
             if (
                 userByEmail.Result != null && // Si el usuario existe en la DB.
-                vetByEmail.Result != null && // Si el veterinario existe en la DB.
-                !newList.Any() && // Si no hay otras citas en esa hora.
-                appointment.InitialDate // Si la fecha de inicio es
-                < appointment.FinishDate && //  anterior a la de fin.
-                pet.Result != null // Si la mascota existe en la DB.
+                vetByEmail.Result != null &&  // Si el veterinario existe en la DB.
+                !newList.Any() &&             // Si no hay otras citas en esa hora.
+                appointment.InitialDate       // Si la fecha de inicio es
+                < appointment.FinishDate &&   // anterior a la de fin.
+                pet.Result != null            // Si la mascota existe en la DB.
             )
             {
-                var created = await Repo.Create(appointment);
-                if (created != null)
-                {
-                    var usr = UserRepo.FindByEmail(created.UserEmail);
-                    var pt = PetRepo.FindById(created.PetId);
-                    var vt = VetRepo.FindByEmail(created.VetEmail);
-                    Task.WaitAll(usr, pt, vt);
-                    if (usr.Result == null)
-                        return new Either<AppointmentDTO, DomainError>
-                            (new UserErrorNotFound($"User with email {created.UserEmail} not found."));
-
-                    if (pt.Result == null)
-                        return new Either<AppointmentDTO, DomainError>
-                            (new PetErrorNotFound($"Pet with id {created.PetId} not found."));
-
-                    if (vt.Result == null)
-                        return new Either<AppointmentDTO, DomainError>
-                            (new VetErrorNotFound($"Vet with email {created.VetEmail} not found."));
-
-                    return new Either<AppointmentDTO, DomainError>
-                        (created.ToDTO(usr.Result, pt.Result, vt.Result));
-                }
-                else
-                    return new Either<AppointmentDTO, DomainError>
-                        (new AppointmentErrorBadRequest("Could not create appointment."));
+                await Repo.Create(appointment);
+                return new Either<AppointmentDTO, DomainError>
+                    (appointment.ToDTO(userByEmail.Result, pet.Result, vetByEmail.Result));
             }
             else
                 return new Either<AppointmentDTO, DomainError>

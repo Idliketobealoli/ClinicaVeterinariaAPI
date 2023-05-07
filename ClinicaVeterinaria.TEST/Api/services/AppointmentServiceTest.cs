@@ -34,7 +34,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             UserRepo = new Mock<UserRepository>();
             VetRepo = new Mock<VetRepository>();
             Service = new AppointmentService(AppointmentRepo.Object, PetRepo.Object, UserRepo.Object, VetRepo.Object);
-            EntityAppointment = new Appointment("prueba@prueba.com", DateTime.Now, DateTime.Now,
+            EntityAppointment = new Appointment("prueba@prueba.com", DateTime.Now, DateTime.Now.AddHours(1),
                 Guid.Parse("7e2809eb-a756-4515-9646-aca4d58f6a01"), "Dato", "vet@vet.com");
             UserDto = new("Sebastian", "Mendoza");
             UserTest = new("Sebastian", "Mendoza", "sebs@mendoza.com", "000000000", "prueba");
@@ -153,23 +153,143 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Assert.AreEqual($"Vet with email {EntityAppointment.VetEmail} not found.", res.Result._errorValue);
         }
 
-         [TestMethod]
-         public void CreateOk()
-         {
-             AppointmentRepo.Setup(x => x.FindAll()).ReturnsAsync(ListAppointments, new TimeSpan(100));
-             UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(UserTest, new TimeSpan(100));
-             VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(VetTest, new TimeSpan(100));
-             PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(PetTest, new TimeSpan(100));
-             AppointmentRepo.Setup(x => x.Create(It.IsAny<Appointment>()))
-                 .ReturnsAsync(EntityAppointment, new TimeSpan(100));
+        [TestMethod]
+        public void CreateOk()
+        {
+            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(UserTest, new TimeSpan(100));
+            VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(VetTest, new TimeSpan(100));
+            AppointmentRepo.Setup(x => x.FindAll()).ReturnsAsync(new(), new TimeSpan(100));
+            PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(PetTest, new TimeSpan(100));
+            AppointmentRepo.Setup(x => x.Create(It.IsAny<Appointment>()))
+                .ReturnsAsync(EntityAppointment, new TimeSpan(100));
 
-             var res = Service.Create(EntityAppointment);
-             res.Wait();
+            var res = Service.Create(EntityAppointment);
+            res.Wait();
 
-             Assert.IsTrue(res.Result._isSuccess);
-             Assert.IsNotNull(res.Result._successValue);
-             Assert.IsNull(res.Result._errorValue);
-             Assert.AreEqual(DTO.Pet.Name, res.Result._successValue.Pet.Name);
-         }
+            Assert.IsTrue(res.Result._isSuccess);
+            Assert.IsNotNull(res.Result._successValue);
+            Assert.IsNull(res.Result._errorValue);
+            Assert.AreEqual(DTO.Pet.Name, res.Result._successValue.Pet.Name);
+        }
+
+        [TestMethod]
+        public void CreateBadRequest()
+        {
+            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(UserTest, new TimeSpan(100));
+            VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(VetTest, new TimeSpan(100));
+            AppointmentRepo.Setup(x => x.FindAll()).ReturnsAsync(ListAppointments, new TimeSpan(100));
+            PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(PetTest, new TimeSpan(100));
+            AppointmentRepo.Setup(x => x.Create(It.IsAny<Appointment>()))
+                .ReturnsAsync(EntityAppointment, new TimeSpan(100));
+
+            var res = Service.Create(EntityAppointment);
+            res.Wait();
+
+            Assert.IsFalse(res.Result._isSuccess);
+            Assert.IsNull(res.Result._successValue);
+            Assert.IsNotNull(res.Result._errorValue);
+            Assert.AreEqual("Incorrect data for the new appointment.", res.Result._errorValue.Message);
+        }
+
+        [TestMethod]
+        public void DeleteOk()
+        {
+            AppointmentRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(EntityAppointment, new TimeSpan(100));
+            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(UserTest, new TimeSpan(100));
+            PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(PetTest, new TimeSpan(100));
+            VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(VetTest, new TimeSpan(100));
+            AppointmentRepo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(EntityAppointment, new TimeSpan(100));
+
+            var res = Service.Delete(EntityAppointment.Id);
+            res.Wait();
+
+            Assert.IsTrue(res.Result._isSuccess);
+            Assert.IsNotNull(res.Result._successValue);
+            Assert.IsNull(res.Result._errorValue);
+            Assert.AreEqual(DTO.Pet.Name, res.Result._successValue.Pet.Name);
+        }
+
+        [TestMethod]
+        public void DeleteBadRequest()
+        {
+            AppointmentRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(EntityAppointment, new TimeSpan(100));
+            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(UserTest, new TimeSpan(100));
+            PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(PetTest, new TimeSpan(100));
+            VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(VetTest, new TimeSpan(100));
+            AppointmentRepo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
+
+            var res = Service.Delete(EntityAppointment.Id);
+            res.Wait();
+
+            Assert.IsFalse(res.Result._isSuccess);
+            Assert.IsNull(res.Result._successValue);
+            Assert.IsNotNull(res.Result._errorValue);
+            Assert.AreEqual($"Could not delete Appointment with id {EntityAppointment.Id}.", res.Result._errorValue.Message);
+        }
+
+        [TestMethod]
+        public void DeleteAppointmentNF()
+        {
+            AppointmentRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
+
+            var res = Service.Delete(EntityAppointment.Id);
+            res.Wait();
+
+            Assert.IsFalse(res.Result._isSuccess);
+            Assert.IsNull(res.Result._successValue);
+            Assert.IsNotNull(res.Result._errorValue);
+            Assert.AreEqual($"Appointment with id {EntityAppointment.Id} not found.", res.Result._errorValue.Message);
+        }
+
+        [TestMethod]
+        public void DeleteUserNF()
+        {
+            AppointmentRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(EntityAppointment, new TimeSpan(100));
+            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
+            PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
+            VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
+
+            var res = Service.Delete(EntityAppointment.Id);
+            res.Wait();
+
+            Assert.IsFalse(res.Result._isSuccess);
+            Assert.IsNull(res.Result._successValue);
+            Assert.IsNotNull(res.Result._errorValue);
+            Assert.AreEqual($"User with email {EntityAppointment.UserEmail} not found.", res.Result._errorValue.Message);
+        }
+
+        [TestMethod]
+        public void DeletePetNF()
+        {
+            AppointmentRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(EntityAppointment, new TimeSpan(100));
+            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(UserTest, new TimeSpan(100));
+            PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
+            VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
+
+            var res = Service.Delete(EntityAppointment.Id);
+            res.Wait();
+
+            Assert.IsFalse(res.Result._isSuccess);
+            Assert.IsNull(res.Result._successValue);
+            Assert.IsNotNull(res.Result._errorValue);
+            Assert.AreEqual($"Pet with id {EntityAppointment.PetId} not found.", res.Result._errorValue.Message);
+        }
+
+        [TestMethod]
+        public void DeleteVetNF()
+        {
+            AppointmentRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(EntityAppointment, new TimeSpan(100));
+            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(UserTest, new TimeSpan(100));
+            PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(PetTest, new TimeSpan(100));
+            VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
+
+            var res = Service.Delete(EntityAppointment.Id);
+            res.Wait();
+
+            Assert.IsFalse(res.Result._isSuccess);
+            Assert.IsNull(res.Result._successValue);
+            Assert.IsNotNull(res.Result._errorValue);
+            Assert.AreEqual($"Vet with email {EntityAppointment.VetEmail} not found.", res.Result._errorValue.Message);
+        }
     }
 }

@@ -1,5 +1,4 @@
 using ClinicaVeterinaria.API.Api.dto;
-using ClinicaVeterinaria.API.Api.errors;
 using ClinicaVeterinaria.API.Api.model;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services;
