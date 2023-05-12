@@ -1,10 +1,15 @@
 ﻿namespace ClinicaVeterinaria.API.Api.services.bcrypt
 {
-    public class CipherService
+    public static class CipherService
     {
-        public string Encode(string password)
+        public static string Encode(string password)
         {
-            return null;
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        public static bool Decode(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
     }
 }

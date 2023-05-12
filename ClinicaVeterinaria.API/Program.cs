@@ -2,6 +2,7 @@ using ClinicaVeterinaria.API.Api.controllers;
 using ClinicaVeterinaria.API.Api.db;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -44,6 +45,12 @@ namespace ClinicaVeterinaria.API
 
             string? connectionString = builder.Configuration.GetConnectionString("default_connection");
             builder.Services.AddPooledDbContextFactory<ClinicaDBContext>(o => o.UseNpgsql(connectionString));
+
+            //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<ClinicaDBContext>()
+            //    .AddDefaultTokenProviders();
+
+            //builder.Services.
 
             builder.Services.AddSingleton<UserRepository>();
             builder.Services.AddSingleton<VetRepository>();
