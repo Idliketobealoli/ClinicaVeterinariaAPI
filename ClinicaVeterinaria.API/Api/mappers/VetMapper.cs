@@ -1,5 +1,6 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.model;
+using ClinicaVeterinaria.API.Api.services.bcrypt;
 
 namespace ClinicaVeterinaria.API.Api.mappers
 {
@@ -45,7 +46,7 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 dto.Surname,
                 dto.Email,
                 dto.SSNumber,
-                dto.Password,
+                CipherService.Encode(dto.Password),
                 dto.Role,
                 dto.Specialty
                 );

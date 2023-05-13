@@ -46,28 +46,33 @@ namespace ClinicaVeterinaria.API
             string? connectionString = builder.Configuration.GetConnectionString("default_connection");
             builder.Services.AddPooledDbContextFactory<ClinicaDBContext>(o => o.UseNpgsql(connectionString));
 
+            builder.Services.AddHttpsRedirection(options =>
+            {
+                options.HttpsPort = 443;
+            });
+
             //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
             //    .AddEntityFrameworkStores<ClinicaDBContext>()
             //    .AddDefaultTokenProviders();
 
             //builder.Services.
 
-            builder.Services.AddSingleton<UserRepository>();
-            builder.Services.AddSingleton<VetRepository>();
-            builder.Services.AddSingleton<AppointmentRepository>();
-            builder.Services.AddSingleton<HistoryRepository>();
-            builder.Services.AddSingleton<VaccineRepository>();
-            builder.Services.AddSingleton<PetRepository>();
-            builder.Services.AddSingleton<UserService>();
-            builder.Services.AddSingleton<VetService>();
-            builder.Services.AddSingleton<AppointmentService>();
-            builder.Services.AddSingleton<HistoryService>();
-            builder.Services.AddSingleton<PetService>();
-            builder.Services.AddSingleton<UserController>();
-            builder.Services.AddSingleton<VetController>();
-            builder.Services.AddSingleton<AppointmentController>();
-            builder.Services.AddSingleton<HistoryController>();
-            builder.Services.AddSingleton<PetController>();
+            builder.Services.AddScoped<UserRepository>();
+            builder.Services.AddScoped<VetRepository>();
+            builder.Services.AddScoped<AppointmentRepository>();
+            builder.Services.AddScoped<HistoryRepository>();
+            builder.Services.AddScoped<VaccineRepository>();
+            builder.Services.AddScoped<PetRepository>();
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<VetService>();
+            builder.Services.AddScoped<AppointmentService>();
+            builder.Services.AddScoped<HistoryService>();
+            builder.Services.AddScoped<PetService>();
+            builder.Services.AddScoped<UserController>();
+            builder.Services.AddScoped<VetController>();
+            builder.Services.AddScoped<AppointmentController>();
+            builder.Services.AddScoped<HistoryController>();
+            builder.Services.AddScoped<PetController>();
             builder.Services.AddDbContext<ClinicaDBContext>(); // POSIBLE CAMBIAR
 
             var app = builder.Build();

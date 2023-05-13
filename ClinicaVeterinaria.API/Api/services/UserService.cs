@@ -1,6 +1,7 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.mappers;
 using ClinicaVeterinaria.API.Api.repositories;
+using ClinicaVeterinaria.API.Api.services.bcrypt;
 
 namespace ClinicaVeterinaria.API.Api.services
 {
@@ -74,7 +75,7 @@ namespace ClinicaVeterinaria.API.Api.services
         public virtual async Task<Either<UserDTOandToken, string>> Login(UserDTOloginOrChangePassword dto)
         {
             var userByEmail = await Repo.FindByEmail(dto.Email);
-            if (userByEmail != null && userByEmail.Password == dto.Password)
+            if (userByEmail != null && CipherService.Decode(dto.Password, userByEmail.Password))
             {
                 return new Either<UserDTOandToken, string>(userByEmail.toDTOwithToken());
             }
@@ -87,7 +88,7 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public virtual async Task<Either<UserDTO, string>> ChangePassword(UserDTOloginOrChangePassword dto)
         {
-            var user = await Repo.UpdatePassword(dto.Email, dto.Password);
+            var user = await Repo.UpdatePassword(dto.Email, CipherService.Encode(dto.Password));
             if (user != null)
             {
                 return new Either<UserDTO, string>(user.ToDTO());
