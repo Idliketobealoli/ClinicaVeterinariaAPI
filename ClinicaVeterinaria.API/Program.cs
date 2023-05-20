@@ -4,6 +4,7 @@ using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -43,37 +44,30 @@ namespace ClinicaVeterinaria.API
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
-            string? connectionString = builder.Configuration.GetConnectionString("default_connection");
-            builder.Services.AddPooledDbContextFactory<ClinicaDBContext>(o => o.UseNpgsql(connectionString));
+            builder.Services.AddDbContext<ClinicaDBContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddHttpsRedirection(options =>
-            {
-                options.HttpsPort = 443;
-            });
-
-            //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<ClinicaDBContext>()
-            //    .AddDefaultTokenProviders();
-
-            //builder.Services.
-
+            // DI de los repositorios
             builder.Services.AddScoped<UserRepository>();
             builder.Services.AddScoped<VetRepository>();
             builder.Services.AddScoped<AppointmentRepository>();
             builder.Services.AddScoped<HistoryRepository>();
             builder.Services.AddScoped<VaccineRepository>();
             builder.Services.AddScoped<PetRepository>();
+
+            // DI de los servicios
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<VetService>();
             builder.Services.AddScoped<AppointmentService>();
             builder.Services.AddScoped<HistoryService>();
             builder.Services.AddScoped<PetService>();
+
+            // DI de los controladores
             builder.Services.AddScoped<UserController>();
             builder.Services.AddScoped<VetController>();
             builder.Services.AddScoped<AppointmentController>();
             builder.Services.AddScoped<HistoryController>();
             builder.Services.AddScoped<PetController>();
-            builder.Services.AddDbContext<ClinicaDBContext>(); // POSIBLE CAMBIAR
 
             var app = builder.Build();
 

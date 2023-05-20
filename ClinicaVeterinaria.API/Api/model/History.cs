@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClinicaVeterinaria.API.Api.model
 {
+    [Table("Histories")]
     public class History
     {
         public History
@@ -15,7 +17,7 @@ namespace ClinicaVeterinaria.API.Api.model
             AilmentTreatment = new Dictionary<string,string>();
         }
 
-        [Key]
+        [Required, Key]
         public Guid Id { get; set; }
         public Guid PetId { get; set; }
         [Required]

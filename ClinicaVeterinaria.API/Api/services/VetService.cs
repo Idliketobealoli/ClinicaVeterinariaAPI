@@ -13,7 +13,6 @@ namespace ClinicaVeterinaria.API.Api.services
         {
             Repo = repo;
         }
-
         public VetService() { }
 
         public virtual async Task<List<VetDTO>> FindAll()
@@ -86,12 +85,16 @@ namespace ClinicaVeterinaria.API.Api.services
         {
             var userByEmail = await Repo.FindByEmail(dto.Email);
 
-            if (userByEmail == null || CipherService.Decode(dto.Password, userByEmail.Password))
+            if (userByEmail != null && CipherService.Decode(dto.Password, userByEmail.Password))
+            {
+                return new Either<VetDTOandToken, string>
+                    (userByEmail.ToDTOwithToken());
+            }
+            else
+            {
                 return new Either<VetDTOandToken, string>
                     ("Incorrect email or password.");
-
-            else return new Either<VetDTOandToken, string>
-                    (userByEmail.ToDTOwithToken());
+            }
         }
 
         public virtual async Task<Either<VetDTO, string>> ChangePassword(VetDTOloginOrChangePassword dto)

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClinicaVeterinaria.API.Api.model
 {
+    [Table("Vets")]
     public class Vet
     {
         public Vet
@@ -25,7 +27,7 @@ namespace ClinicaVeterinaria.API.Api.model
             Specialty = specialty;
         }
 
-        [Key]
+        [Required, Key]
         public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }

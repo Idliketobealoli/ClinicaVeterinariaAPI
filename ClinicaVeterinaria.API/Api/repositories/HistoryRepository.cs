@@ -6,52 +6,48 @@ namespace ClinicaVeterinaria.API.Api.repositories
 {
     public class HistoryRepository
     {
-        private readonly IDbContextFactory<ClinicaDBContext> ContextFactory;
+        private readonly ClinicaDBContext Context;
 
-        public HistoryRepository(IDbContextFactory<ClinicaDBContext> contextFactory)
+        public HistoryRepository(ClinicaDBContext context)
         {
-            ContextFactory = contextFactory;
+            Context = context;
+            context.Database.Migrate();
         }
 
         public HistoryRepository() { }
 
         public virtual async Task<List<History>> FindAll()
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var histories = await context.Histories.ToListAsync();
+            var histories = await Context.Histories.ToListAsync();
             return histories ?? new();
         }
 
         public virtual async Task<History?> FindById(Guid id)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            return await context.Histories.FirstOrDefaultAsync(u => u.Id == id);
+            return await Context.Histories.FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public virtual async Task<History?> FindByPetId(Guid id)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            return await context.Histories.FirstOrDefaultAsync(u => u.PetId == id);
+            return await Context.Histories.FirstOrDefaultAsync(u => u.PetId == id);
         }
 
         public virtual async Task<History> Create(History history)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            context.Histories.Add(history);
-            await context.SaveChangesAsync();
+            Context.Histories.Add(history);
+            await Context.SaveChangesAsync();
 
             return history;
         }
 
         public virtual async Task<History?> Update(Guid id, History history)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var found = context.Histories.FirstOrDefault(u => u.Id == id);
+            var found = Context.Histories.FirstOrDefault(u => u.Id == id);
             if (found != null)
             {
                 history.Id = found.Id;
-                context.Histories.Update(history);
-                await context.SaveChangesAsync();
+                Context.Histories.Update(history);
+                await Context.SaveChangesAsync();
 
                 return history;
             }
@@ -60,12 +56,11 @@ namespace ClinicaVeterinaria.API.Api.repositories
 
         public virtual async Task<History?> Delete(Guid id)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var found = context.Histories.FirstOrDefault(u => u.Id == id);
+            var found = Context.Histories.FirstOrDefault(u => u.Id == id);
             if (found != null)
             {
-                context.Histories.Remove(found);
-                await context.SaveChangesAsync();
+                Context.Histories.Remove(found);
+                await Context.SaveChangesAsync();
 
                 return found;
             }

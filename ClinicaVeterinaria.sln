@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicaVeterinaria.API", "ClinicaVeterinaria.API\ClinicaVeterinaria.API.csproj", "{9DB939A2-F3E6-4414-9B14-65EA92E80438}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicaVeterinaria.TEST", "ClinicaVeterinaria.TEST\ClinicaVeterinaria.TEST.csproj", "{6F7A0373-2527-486D-A04C-4284B8CF4AE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicaVeterinaria.TEST", "ClinicaVeterinaria.TEST\ClinicaVeterinaria.TEST.csproj", "{6F7A0373-2527-486D-A04C-4284B8CF4AE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

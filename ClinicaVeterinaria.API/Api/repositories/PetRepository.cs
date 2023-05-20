@@ -7,48 +7,45 @@ namespace ClinicaVeterinaria.API.Api.repositories
 {
     public class PetRepository
     {
-        private readonly IDbContextFactory<ClinicaDBContext> ContextFactory;
+        private readonly ClinicaDBContext Context;
 
-        public PetRepository(IDbContextFactory<ClinicaDBContext> contextFactory)
+        public PetRepository(ClinicaDBContext context)
         {
-            ContextFactory = contextFactory;
+            Context = context;
+            context.Database.Migrate();
         }
 
         public PetRepository() { }
 
         public virtual async Task<List<Pet>> FindAll()
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var pets = await context.Pets.ToListAsync();
+            var pets = await Context.Pets.ToListAsync();
             return pets ?? new();
         }
 
         public virtual async Task<Pet?> FindById(Guid id)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            return await context.Pets.FirstOrDefaultAsync(u => u.Id == id);
+            return await Context.Pets.FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public virtual async Task<Pet> Create(Pet pet)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            context.Pets.Add(pet);
-            await context.SaveChangesAsync();
+            Context.Pets.Add(pet);
+            await Context.SaveChangesAsync();
 
             return pet;
         }
 
         public virtual async Task<Pet?> Update(PetDTOupdate pet)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var found = context.Pets.FirstOrDefault(u => u.Id == pet.Id);
+            var found = Context.Pets.FirstOrDefault(u => u.Id == pet.Id);
             if (found != null)
             {
                 found.Name = pet.Name ?? found.Name;
                 found.Weight = pet.Weight ?? found.Weight;
                 found.Size = pet.Size ?? found.Size;
-                context.Pets.Update(found);
-                await context.SaveChangesAsync();
+                Context.Pets.Update(found);
+                await Context.SaveChangesAsync();
 
                 return found;
             }
@@ -57,12 +54,11 @@ namespace ClinicaVeterinaria.API.Api.repositories
 
         public virtual async Task<Pet?> Delete(Guid id)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var found = context.Pets.FirstOrDefault(u => u.Id == id);
+            var found = Context.Pets.FirstOrDefault(u => u.Id == id);
             if (found != null)
             {
-                context.Pets.Remove(found);
-                await context.SaveChangesAsync();
+                Context.Pets.Remove(found);
+                await Context.SaveChangesAsync();
 
                 return found;
             }

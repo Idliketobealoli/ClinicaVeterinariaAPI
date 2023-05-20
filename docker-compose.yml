@@ -1,10 +1,12 @@
 version: '3.4'
 
 services:
-    postgresql-database:
+    database_clinica:
         container_name: "database_clinica"
         image: postgres:14.1-alpine
         restart: always
+        ports:
+            - 5432:5432
         environment:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=MiGataSeLlamaGata
@@ -12,16 +14,16 @@ services:
         volumes:
             - database_clinica:/var/lib/postgresql/data
 
-    clinicaveterinaria.api:
+    clinica_veterinaria_api:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: "clinica_veterinaria"
+        container_name: "clinica_veterinaria_api"
         ports:
             - '1707:80'
             - '443:443'
         depends_on:
-            - postgresql-database
+            - database_clinica
         environment:
             - ASPNETCORE_Kestrel__Endpoints__Https__Url=https://+:443;CertificatePath=/https/aspnetapp.pfx;CertificatePassword=clinicaveterinaria
         volumes:

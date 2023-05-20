@@ -6,58 +6,53 @@ namespace ClinicaVeterinaria.API.Api.repositories
 {
     public class UserRepository
     {
-        private readonly IDbContextFactory<ClinicaDBContext> ContextFactory;
+        private readonly ClinicaDBContext Context;
+
+        public UserRepository(ClinicaDBContext context)
+        {
+            Context = context;
+            context.Database.Migrate();
+        }
 
         public UserRepository() { }
 
-        public UserRepository(IDbContextFactory<ClinicaDBContext> contextFactory)
-        {
-            ContextFactory = contextFactory;
-        }
-
         public virtual async Task<List<User>> FindAll()
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var users = await context.Users.ToListAsync();
+            var users = await Context.Users.ToListAsync();
             return users ?? new();
         }
 
         public virtual async Task<User?> FindById(Guid id)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            return await context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return await Context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public virtual async Task<User?> FindByEmail(string email)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            return await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await Context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public virtual async Task<User?> FindByPhone(string phone)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            return await context.Users.FirstOrDefaultAsync(u => u.Phone == phone);
+            return await Context.Users.FirstOrDefaultAsync(u => u.Phone == phone);
         }
 
         public virtual async Task<User> Create(User user)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
+            Context.Users.Add(user);
+            await Context.SaveChangesAsync();
 
             return user;
         }
 
         public virtual async Task<User?> UpdatePassword(string email, string newPassword)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var found = context.Users.FirstOrDefault(u => u.Email == email);
+            var found = Context.Users.FirstOrDefault(u => u.Email == email);
             if (found != null)
             {
                 found.Password = newPassword;
-                context.Users.Update(found);
-                await context.SaveChangesAsync();
+                Context.Users.Update(found);
+                await Context.SaveChangesAsync();
 
                 return found;
             }
@@ -66,12 +61,11 @@ namespace ClinicaVeterinaria.API.Api.repositories
 
         public virtual async Task<User?> Delete(string email)
         {
-            using ClinicaDBContext context = ContextFactory.CreateDbContext();
-            var foundUser = context.Users.FirstOrDefault(u => u.Email == email);
+            var foundUser = Context.Users.FirstOrDefault(u => u.Email == email);
             if (foundUser != null)
             {
-                context.Users.Remove(foundUser);
-                await context.SaveChangesAsync();
+                Context.Users.Remove(foundUser);
+                await Context.SaveChangesAsync();
 
                 return foundUser;
             }

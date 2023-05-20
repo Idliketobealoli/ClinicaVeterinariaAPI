@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClinicaVeterinaria.API.Api.model
 {
+    [Table("Appointments")]
     public class Appointment
     {
         public Appointment
@@ -24,7 +26,7 @@ namespace ClinicaVeterinaria.API.Api.model
             VetEmail = vetEmail;
         }
 
-        [Key]
+        [Required, Key]
         public Guid Id { get; set; }
         [Required]
         public string UserEmail { get; set; }

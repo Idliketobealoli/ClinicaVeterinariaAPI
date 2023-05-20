@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClinicaVeterinaria.API.Api.model
 {
+    [Table("Vaccines")]
     public class Vaccine
     {
         public Vaccine() { }
@@ -13,7 +15,7 @@ namespace ClinicaVeterinaria.API.Api.model
             Date = date;
         }
 
-        [Key]
+        [Required, Key]
         public Guid Id { get; set; }
         [Required]
         public Guid PetId { get; set; }

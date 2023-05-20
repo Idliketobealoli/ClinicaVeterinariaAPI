@@ -25,9 +25,7 @@ namespace ClinicaVeterinaria.API.Api.services
             VetRepo = vetRepo;
         }
 
-        public AppointmentService()
-        {
-        }
+        public AppointmentService() { }
 
         public virtual async Task<List<AppointmentDTOshort>> FindAll()
         {

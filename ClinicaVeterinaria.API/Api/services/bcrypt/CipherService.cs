@@ -4,7 +4,7 @@
     {
         public static string Encode(string password)
         {
-            return BCrypt.Net.BCrypt.HashPassword(password);
+            return BCrypt.Net.BCrypt.HashPassword(password, 12);
         }
 
         public static bool Decode(string password, string hashedPassword)

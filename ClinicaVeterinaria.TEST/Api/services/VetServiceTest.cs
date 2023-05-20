@@ -3,6 +3,7 @@ using ClinicaVeterinaria.API.Api.errors;
 using ClinicaVeterinaria.API.Api.model;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services;
+using ClinicaVeterinaria.API.Api.services.bcrypt;
 using Moq;
 
 namespace ClinicaVeterinaria.TEST.Api.services
@@ -15,6 +16,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         private List<Vet> List;
         private List<VetDTO> ListDTO;
         private Vet Entity;
+        private Vet EntityLogin;
         private VetDTO DTO;
         private VetDTOshort DTOShort;
         private VetDTOappointment DTOappointment;
@@ -31,6 +33,9 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Entity = new(
                 "test", "testeado", "uwu@gmail.com",
                 "123456789", "uwu1234", Role.VET, "qwerty");
+            EntityLogin = new(
+                "test", "testeado", "uwu@gmail.com",
+                "123456789", CipherService.Encode("uwu1234"), Role.VET, "qwerty");
             DTO = new(
                 "test", "testeado", "uwu@gmail.com",
                 "123456789", Role.VET, "qwerty");
@@ -195,7 +200,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         [TestMethod]
         public void LoginOk()
         {
-            Repo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
+            Repo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(EntityLogin, new TimeSpan(100));
 
             var res = Service.Login(DTOlogin);
             res.Wait();
