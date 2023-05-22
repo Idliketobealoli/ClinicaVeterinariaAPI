@@ -6,7 +6,6 @@ namespace ClinicaVeterinaria.API.Api.model
     [Table("Vaccines")]
     public class Vaccine
     {
-        public Vaccine() { }
         public Vaccine(Guid petId, string name, DateOnly date)
         {
             Id = Guid.NewGuid();

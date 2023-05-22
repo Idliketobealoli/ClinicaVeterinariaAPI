@@ -2,6 +2,7 @@
 using ClinicaVeterinaria.API.Api.mappers;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services.bcrypt;
+using ClinicaVeterinaria.API.Api.services.tokens;
 
 namespace ClinicaVeterinaria.API.Api.services
 {
@@ -60,12 +61,11 @@ namespace ClinicaVeterinaria.API.Api.services
                     (user.ToDTOappointment());
         }
 
-        public virtual async Task<Either<VetDTOandToken, string>> Register(VetDTOregister dto)
+        public virtual async Task<Either<VetDTOandToken, string>> Register(VetDTOregister dto, IConfiguration? config)
         {
-            var userByEmail = Repo.FindByEmail(dto.Email);
-            var userBySSNumber = Repo.FindBySSNum(dto.SSNumber);
-            Task.WaitAll(userByEmail, userBySSNumber);
-            if (userBySSNumber.Result != null || userByEmail.Result != null)
+            var userByEmail = await Repo.FindByEmail(dto.Email);
+            var userBySSNumber = await Repo.FindBySSNum(dto.SSNumber);
+            if (userBySSNumber != null || userByEmail != null)
                 return new Either<VetDTOandToken, string>
                     ("Cannot use either that email or that Social Security number.");
             else
@@ -73,22 +73,27 @@ namespace ClinicaVeterinaria.API.Api.services
                 var user = dto.FromDTOregister();
                 var created = await Repo.Create(user);
 
-                if (created != null) return new Either<VetDTOandToken, string>
-                        (created.ToDTOwithToken());
+                if (created != null)
+                {
+                    var token = TokenService.CreateToken(created, config);
+                    return new Either<VetDTOandToken, string>
+                        (created.ToDTOwithToken(token));
+                }
 
                 else return new Either<VetDTOandToken, string>
                         ("Could not register vet.");
             }
         }
 
-        public virtual async Task<Either<VetDTOandToken, string>> Login(VetDTOloginOrChangePassword dto)
+        public virtual async Task<Either<VetDTOandToken, string>> Login(VetDTOloginOrChangePassword dto, IConfiguration? config)
         {
             var userByEmail = await Repo.FindByEmail(dto.Email);
 
             if (userByEmail != null && CipherService.Decode(dto.Password, userByEmail.Password))
             {
+                var token = TokenService.CreateToken(userByEmail, config);
                 return new Either<VetDTOandToken, string>
-                    (userByEmail.ToDTOwithToken());
+                    (userByEmail.ToDTOwithToken(token));
             }
             else
             {

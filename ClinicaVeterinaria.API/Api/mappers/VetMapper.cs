@@ -47,17 +47,17 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 dto.Email,
                 dto.SSNumber,
                 CipherService.Encode(dto.Password),
-                dto.Role,
+                Roles.FromString(dto.Role),
                 dto.Specialty
                 );
         }
 
-        public static VetDTOandToken ToDTOwithToken(this Vet vet)
+        public static VetDTOandToken ToDTOwithToken(this Vet vet, string? token)
         {
             return new
                 (
                 vet.ToDTO(),
-                "token" // esto habrá que modificarlo cuando metamos tokens
+                token ?? ""
                 );
         }
     }

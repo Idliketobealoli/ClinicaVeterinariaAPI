@@ -38,12 +38,12 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 );
         }
 
-        public static UserDTOandToken toDTOwithToken(this User user)
+        public static UserDTOandToken ToDTOwithToken(this User user, string? token)
         {
             return new
                 (
                 user.ToDTO(),
-                "token" // esto habrá que modificarlo cuando metamos tokens
+                token ?? ""
                 );
         }
     }

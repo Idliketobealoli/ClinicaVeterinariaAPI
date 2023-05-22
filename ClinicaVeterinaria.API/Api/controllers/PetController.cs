@@ -2,10 +2,12 @@
 using ClinicaVeterinaria.API.Api.errors;
 using ClinicaVeterinaria.API.Api.services;
 using ClinicaVeterinaria.API.Api.validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
+    [Authorize]
     [ApiController]
     [Route("pets")]
     public class PetController

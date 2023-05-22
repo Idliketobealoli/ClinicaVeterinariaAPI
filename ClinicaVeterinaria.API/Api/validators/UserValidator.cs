@@ -1,5 +1,4 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
-using ClinicaVeterinaria.API.Api.errors;
 using System.Net.Mail;
 
 namespace ClinicaVeterinaria.API.Api.validators

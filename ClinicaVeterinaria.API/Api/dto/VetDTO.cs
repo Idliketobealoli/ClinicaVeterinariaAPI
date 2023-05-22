@@ -8,7 +8,7 @@ namespace ClinicaVeterinaria.API.Api.dto
         public string Surname { get; set; }
         public string Email { get; set; }
         public string SSNumber { get; set; }
-        public Role Role { get; set; }
+        public string Role { get; set; }
         public string Specialty { get; set; }
 
         public VetDTO
@@ -25,7 +25,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             Surname = surname;
             Email = email;
             SSNumber = ssnum;
-            Role = role;
+            Role = Roles.ToString(role);
             Specialty = specialty;
         }
     }
@@ -72,20 +72,8 @@ namespace ClinicaVeterinaria.API.Api.dto
         public string SSNumber { get; set; }
         public string Password { get; set; }
         public string RepeatPassword { get; set; }
-        public Role Role { get; set; }
+        public string Role { get; set; }
         public string Specialty { get; set; }
-
-        public VetDTOregister()
-        {
-            Name = "";
-            Surname = "";
-            Email = "";
-            SSNumber = "";
-            Password = "";
-            RepeatPassword = "";
-            Role = Role.VET;
-            Specialty = "";
-        }
 
         public VetDTOregister
             (
@@ -105,7 +93,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             SSNumber = ssnum;
             Password = password;
             RepeatPassword = repeatPassword;
-            Role = role;
+            Role = Roles.ToString(role);
             Specialty = specialty;
         }
     }

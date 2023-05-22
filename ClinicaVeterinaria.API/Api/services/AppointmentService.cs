@@ -58,56 +58,53 @@ namespace ClinicaVeterinaria.API.Api.services
             }
             else
             {
-                var user = UserRepo.FindByEmail(task.UserEmail);
-                var pet = PetRepo.FindById(task.PetId);
-                var vet = VetRepo.FindByEmail(task.VetEmail);
-                Task.WaitAll(user, pet, vet);
-                if (user.Result == null)
+                var user = await UserRepo.FindByEmail(task.UserEmail);
+                var pet = await PetRepo.FindById(task.PetId);
+                var vet = await VetRepo.FindByEmail(task.VetEmail);
+                if (user == null)
                     return new Either<AppointmentDTO, string>
                         ($"User with email {task.UserEmail} not found.");
 
-                if (pet.Result == null)
+                if (pet == null)
                     return new Either<AppointmentDTO, string>
                         ($"Pet with id {task.PetId} not found.");
 
-                if (vet.Result == null)
+                if (vet == null)
                     return new Either<AppointmentDTO, string>
                         ($"Vet with email {task.VetEmail} not found.");
 
-                return new Either<AppointmentDTO, string>(task.ToDTO(user.Result, pet.Result, vet.Result));
+                return new Either<AppointmentDTO, string>(task.ToDTO(user, pet, vet));
             }
         }
 
         public virtual async Task<Either<AppointmentDTO, DomainError>> Create(Appointment appointment)
         {
-            var userByEmail = UserRepo.FindByEmail(appointment.UserEmail);
-            var vetByEmail = VetRepo.FindByEmail(appointment.VetEmail);
-            var allAppointments = Repo.FindAll();
-            var pet = PetRepo.FindById(appointment.PetId);
-
-            Task.WaitAll(userByEmail, vetByEmail, allAppointments, pet);
+            var userByEmail = await UserRepo.FindByEmail(appointment.UserEmail);
+            var vetByEmail = await VetRepo.FindByEmail(appointment.VetEmail);
+            var allAppointments = await Repo.FindAll();
+            var pet = await PetRepo.FindById(appointment.PetId);
 
             IEnumerable<Appointment>? newList = new List<Appointment>();
-            if (allAppointments.Result != null)
+            if (allAppointments != null)
             {
                 newList =
-                    from ap in allAppointments.Result
+                    from ap in allAppointments
                     where (ap.InitialDate == appointment.InitialDate)
                     select ap;
             }
 
             if (
-                userByEmail.Result != null && // Si el usuario existe en la DB.
-                vetByEmail.Result != null &&  // Si el veterinario existe en la DB.
+                userByEmail != null &&        // Si el usuario existe en la DB.
+                vetByEmail != null &&         // Si el veterinario existe en la DB.
                 !newList.Any() &&             // Si no hay otras citas en esa hora.
                 appointment.InitialDate       // Si la fecha de inicio es
                 < appointment.FinishDate &&   // anterior a la de fin.
-                pet.Result != null            // Si la mascota existe en la DB.
+                pet != null                   // Si la mascota existe en la DB.
             )
             {
                 await Repo.Create(appointment);
                 return new Either<AppointmentDTO, DomainError>
-                    (appointment.ToDTO(userByEmail.Result, pet.Result, vetByEmail.Result));
+                    (appointment.ToDTO(userByEmail, pet, vetByEmail));
             }
             else
                 return new Either<AppointmentDTO, DomainError>
@@ -123,23 +120,22 @@ namespace ClinicaVeterinaria.API.Api.services
                     (new AppointmentErrorNotFound($"Appointment with id {id} not found."));
             }
 
-            var usr = UserRepo.FindByEmail(appointment.UserEmail);
-            var pt = PetRepo.FindById(appointment.PetId);
-            var vt = VetRepo.FindByEmail(appointment.VetEmail);
-            Task.WaitAll(usr, pt, vt);
-            if (usr.Result == null)
+            var usr = await UserRepo.FindByEmail(appointment.UserEmail);
+            var pt = await PetRepo.FindById(appointment.PetId);
+            var vt = await VetRepo.FindByEmail(appointment.VetEmail);
+            if (usr == null)
                 return new Either<AppointmentDTO, DomainError>
                     (new UserErrorNotFound($"User with email {appointment.UserEmail} not found."));
 
-            if (pt.Result == null)
+            if (pt == null)
                 return new Either<AppointmentDTO, DomainError>
                     (new PetErrorNotFound($"Pet with id {appointment.PetId} not found."));
 
-            if (vt.Result == null)
+            if (vt == null)
                 return new Either<AppointmentDTO, DomainError>
                     (new VetErrorNotFound($"Vet with email {appointment.VetEmail} not found."));
 
-            var successfulResult = appointment.ToDTO(usr.Result, pt.Result, vt.Result);
+            var successfulResult = appointment.ToDTO(usr, pt, vt);
 
             var deleted = await Repo.Delete(id);
             if (deleted != null)

@@ -2,6 +2,7 @@
 using ClinicaVeterinaria.API.Api.mappers;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services.bcrypt;
+using ClinicaVeterinaria.API.Api.services.tokens;
 
 namespace ClinicaVeterinaria.API.Api.services
 {
@@ -49,18 +50,18 @@ namespace ClinicaVeterinaria.API.Api.services
             else return new Either<UserDTOshort, string>(user.ToDTOshort());
         }
 
-        public virtual async Task<Either<UserDTOandToken, string>> Register(UserDTOregister dto)
+        public virtual async Task<Either<UserDTOandToken, string>> Register(UserDTOregister dto, IConfiguration? config)
         {
-            var userByEmail = Repo.FindByEmail(dto.Email);
-            var userByPhone = Repo.FindByPhone(dto.Phone);
-            Task.WaitAll(userByEmail, userByPhone);
-            if (userByPhone.Result == null && userByEmail.Result == null)
+            var userByEmail = await Repo.FindByEmail(dto.Email);
+            var userByPhone = await Repo.FindByPhone(dto.Phone);
+            if (userByPhone == null && userByEmail == null)
             {
                 var user = dto.FromDTOregister();
                 var created = await Repo.Create(user);
                 if (created != null)
                 {
-                    return new Either<UserDTOandToken, string>(created.toDTOwithToken());
+                    var token = TokenService.CreateToken(created, config);
+                    return new Either<UserDTOandToken, string>(created.ToDTOwithToken(token));
                 }
                 else return new Either<UserDTOandToken, string>
                         ("Could not register user.");
@@ -72,12 +73,13 @@ namespace ClinicaVeterinaria.API.Api.services
             }
         }
 
-        public virtual async Task<Either<UserDTOandToken, string>> Login(UserDTOloginOrChangePassword dto)
+        public virtual async Task<Either<UserDTOandToken, string>> Login(UserDTOloginOrChangePassword dto, IConfiguration? config)
         {
             var userByEmail = await Repo.FindByEmail(dto.Email);
             if (userByEmail != null && CipherService.Decode(dto.Password, userByEmail.Password))
             {
-                return new Either<UserDTOandToken, string>(userByEmail.toDTOwithToken());
+                var token = TokenService.CreateToken(userByEmail, config);
+                return new Either<UserDTOandToken, string>(userByEmail.ToDTOwithToken(token));
             }
             else
             {

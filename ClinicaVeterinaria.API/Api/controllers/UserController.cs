@@ -1,6 +1,7 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.services;
 using ClinicaVeterinaria.API.Api.validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaVeterinaria.API.Api.controllers
@@ -10,13 +11,15 @@ namespace ClinicaVeterinaria.API.Api.controllers
     public class UserController
     {
         private readonly UserService Service;
+        private readonly IConfiguration _configuration;
 
-        public UserController(UserService service)
+        public UserController(UserService service, IConfiguration configuration)
         {
             Service = service;
+            _configuration = configuration;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public IResult FindAllUsers()
         {
             var task = Service.FindAll();
@@ -25,7 +28,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             return Results.Ok(task.Result);
         }
 
-        [HttpGet("{email}")]
+        [HttpGet("{email}"), Authorize]
         public IResult FindUserByEmail(string email)
         {
             var task = Service.FindByEmail(email);
@@ -38,7 +41,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpGet("short/{email}")]
+        [HttpGet("short/{email}"), Authorize]
         public IResult FindUserByEmailShort(string email)
         {
             var task = Service.FindByEmailShort(email);
@@ -57,7 +60,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             var err = dto.Validate();
             if (err != null) return Results.BadRequest(err);
 
-            var task = Service.Register(dto);
+            var task = Service.Register(dto, _configuration);
             task.Wait();
 
             return task.Result.Match
@@ -73,7 +76,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             var err = dto.Validate();
             if (err != null) return Results.BadRequest(err);
 
-            var task = Service.Login(dto);
+            var task = Service.Login(dto, _configuration);
             task.Wait();
 
             return task.Result.Match
@@ -83,7 +86,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPut]
+        [HttpPut, Authorize]
         public IResult ChangeUserPassword([FromBody] UserDTOloginOrChangePassword dto)
         {
             var err = dto.Validate();
@@ -99,7 +102,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpDelete("{email}")]
+        [HttpDelete("{email}"), Authorize]
         public IResult DeleteUser(string email)
         {
             var task = Service.Delete(email);

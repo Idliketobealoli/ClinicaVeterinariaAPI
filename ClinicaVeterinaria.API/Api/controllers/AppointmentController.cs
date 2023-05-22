@@ -1,10 +1,12 @@
 ﻿using ClinicaVeterinaria.API.Api.errors;
 using ClinicaVeterinaria.API.Api.model;
 using ClinicaVeterinaria.API.Api.services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
+    [Authorize]
     [ApiController]
     [Route("appointments")]
     public class AppointmentController

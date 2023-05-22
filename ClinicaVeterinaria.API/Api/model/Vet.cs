@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ClinicaVeterinaria.API.Api.model
 {
     [Table("Vets")]
-    public class Vet
+    public class Vet: IUser
     {
         public Vet
             (
@@ -43,11 +43,5 @@ namespace ClinicaVeterinaria.API.Api.model
         public Role Role { get; set; }
         [Required]
         public string Specialty { get; set; }
-    }
-
-    public enum Role
-    {
-        VET,
-        ADMIN
     }
 }

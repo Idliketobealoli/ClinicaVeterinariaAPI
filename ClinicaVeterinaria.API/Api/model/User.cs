@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ClinicaVeterinaria.API.Api.model
 {
     [Table("Users")]
-    public class User
+    public class User: IUser
     {
         public User
             (
@@ -21,6 +21,7 @@ namespace ClinicaVeterinaria.API.Api.model
             Email = email;
             Phone = phone;
             Password = password;
+            Role = Role.USER;
         }
 
         [Required, Key]
@@ -35,5 +36,8 @@ namespace ClinicaVeterinaria.API.Api.model
         public string Phone { get; set; }
         [Required]
         public string Password { get; set; }
+
+        [Required]
+        public Role Role { get; set; }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.services;
 using ClinicaVeterinaria.API.Api.validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
+    [Authorize]
     [ApiController]
     [Route("history")]
     public class HistoryController

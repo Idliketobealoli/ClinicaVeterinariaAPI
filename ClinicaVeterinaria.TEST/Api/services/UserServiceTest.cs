@@ -38,7 +38,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             DTO = new(
                 "test", "testeado", "uwu@gmail.com", "123456789");
             DTOShort = new("test", "testeado");
-            DTOandToken = new(DTO, "token");
+            DTOandToken = new(DTO, "");
             List = new List<User>() { Entity };
             ListDTO = new List<UserDTO>() { DTO };
             DTOregister = new(
@@ -137,7 +137,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Repo.Setup(x => x.FindByPhone(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
             Repo.Setup(x => x.Create(It.IsAny<User>())).ReturnsAsync(Entity, new TimeSpan(100));
 
-            var res = Service.Register(DTOregister);
+            var res = Service.Register(DTOregister, null);
             res.Wait();
 
             Assert.IsTrue(res.Result._isSuccess);
@@ -152,7 +152,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Repo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
             Repo.Setup(x => x.FindByPhone(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
 
-            var res = Service.Register(DTOregister);
+            var res = Service.Register(DTOregister, null);
             res.Wait();
 
             Assert.IsFalse(res.Result._isSuccess);
@@ -166,7 +166,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             Repo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(EntityLogin, new TimeSpan(100));
 
-            var res = Service.Login(DTOlogin);
+            var res = Service.Login(DTOlogin, null);
             res.Wait();
 
             Assert.IsTrue(res.Result._isSuccess);
@@ -180,7 +180,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             Repo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
 
-            var res = Service.Login(DTOlogin);
+            var res = Service.Login(DTOlogin, null);
             res.Wait();
 
             Assert.IsFalse(res.Result._isSuccess);
