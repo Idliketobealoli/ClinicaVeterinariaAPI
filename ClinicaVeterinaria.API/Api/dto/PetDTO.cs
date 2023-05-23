@@ -31,7 +31,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             Guid id, string name,
             string race, string species, Sex sex,
             DateOnly birthDate, double weight, double size,
-            HistoryDTO history,UserDTOshort ownerDto
+            HistoryDTO history,UserDTOshort ownerDTO
             )
         {
             Id = id;
@@ -43,7 +43,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             Weight = weight;
             Size = size;
             History = history;
-            OwnerDTO = ownerDto;
+            OwnerDTO = ownerDTO;
         }
 
         public Guid Id { get; set; }

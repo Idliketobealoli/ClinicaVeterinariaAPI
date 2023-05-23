@@ -46,7 +46,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             DTOregister = new(
                 "test", "testeado2", "email2@gmail.com",
                 "987654321", "uwu1234", "uwu1234",
-                Role.VET, "qwerty");
+                Roles.ToString(Role.VET), "qwerty");
             DTOupdate = new("uwu@gmail.com", "1234uwu");
             DTOlogin = new("uwu@gmail.com", "uwu1234");
             DTOappointment = new("test", "testeado2", "email2@gmail.com");

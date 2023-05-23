@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
-    [Authorize]
     [ApiController]
     [Route("pets")]
     public class PetController
@@ -19,7 +18,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             Service = service;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "ADMIN,VET")]
         public IResult FindAllPets()
         {
             var task = Service.FindAll();
@@ -28,7 +27,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             return Results.Ok(task.Result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindPetById(Guid id)
         {
             var task = Service.FindById(id);
@@ -41,7 +40,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "ADMIN,VET")]
         public IResult CreatePet([FromBody] PetDTOcreate dto)
         {
             var err = dto.Validate();
@@ -64,7 +63,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "ADMIN,VET")]
         public IResult UpdatePet([FromBody] PetDTOupdate dto)
         {
             var err = dto.Validate();
@@ -80,7 +79,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "ADMIN,VET")]
         public IResult DeletePet(Guid id)
         {
             var task = Service.Delete(id);

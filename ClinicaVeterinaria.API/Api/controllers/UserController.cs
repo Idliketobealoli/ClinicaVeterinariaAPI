@@ -19,7 +19,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             _configuration = configuration;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "ADMIN")]
         public IResult FindAllUsers()
         {
             var task = Service.FindAll();
@@ -28,7 +28,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             return Results.Ok(task.Result);
         }
 
-        [HttpGet("{email}"), Authorize]
+        [HttpGet("{email}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindUserByEmail(string email)
         {
             var task = Service.FindByEmail(email);
@@ -41,7 +41,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpGet("short/{email}"), Authorize]
+        [HttpGet("short/{email}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindUserByEmailShort(string email)
         {
             var task = Service.FindByEmailShort(email);
@@ -86,7 +86,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPut, Authorize]
+        [HttpPut, Authorize(Roles = "USER")]
         public IResult ChangeUserPassword([FromBody] UserDTOloginOrChangePassword dto)
         {
             var err = dto.Validate();
@@ -102,7 +102,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpDelete("{email}"), Authorize]
+        [HttpDelete("{email}"), Authorize(Roles = "ADMIN,USER")]
         public IResult DeleteUser(string email)
         {
             var task = Service.Delete(email);

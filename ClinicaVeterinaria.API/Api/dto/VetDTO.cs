@@ -16,7 +16,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             string name,
             string surname,
             string email,
-            string ssnum,
+            string sSNumber,
             Role role,
             string specialty
             )
@@ -24,7 +24,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             Name = name;
             Surname = surname;
             Email = email;
-            SSNumber = ssnum;
+            SSNumber = sSNumber;
             Role = Roles.ToString(role);
             Specialty = specialty;
         }
@@ -80,20 +80,20 @@ namespace ClinicaVeterinaria.API.Api.dto
             string name,
             string surname,
             string email,
-            string ssnum,
+            string sSNumber,
             string password,
             string repeatPassword,
-            Role role,
+            string role,
             string specialty
             )
         {
             Name = name;
             Surname = surname;
             Email = email;
-            SSNumber = ssnum;
+            SSNumber = sSNumber;
             Password = password;
             RepeatPassword = repeatPassword;
-            Role = Roles.ToString(role);
+            Role = role;
             Specialty = specialty;
         }
     }

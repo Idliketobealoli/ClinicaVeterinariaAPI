@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
-    [Authorize]
+    [Authorize(Roles = "ADMIN,VET,USER")]
     [ApiController]
     [Route("appointments")]
     public class AppointmentController

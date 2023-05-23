@@ -3,7 +3,6 @@ using ClinicaVeterinaria.API.Api.services;
 using ClinicaVeterinaria.API.Api.validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
@@ -20,18 +19,16 @@ namespace ClinicaVeterinaria.API.Api.controllers
             _configuration = configuration;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "ADMIN")]
         public IResult FindAllVets()
         {
-            Stopwatch.StartNew();
             var task = Service.FindAll();
             task.Wait();
-            var time = Stopwatch.GetTimestamp();
 
             return Results.Ok(task.Result);
         }
 
-        [HttpGet("{email}"), Authorize]
+        [HttpGet("{email}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindVetByEmail(string email)
         {
             var task = Service.FindByEmail(email);
@@ -44,7 +41,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpGet("short/{email}"), Authorize]
+        [HttpGet("short/{email}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindVetByEmailShort(string email)
         {
             var task = Service.FindByEmailShort(email);
@@ -57,7 +54,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpGet("appointment/{email}"), Authorize]
+        [HttpGet("appointment/{email}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindVetByEmailAppointment(string email)
         {
             var task = Service.FindByEmailAppointment(email);
@@ -102,7 +99,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPut, Authorize]
+        [HttpPut, Authorize(Roles = "ADMIN,VET")]
         public IResult ChangeVetPassword([FromBody] VetDTOloginOrChangePassword dto)
         {
             var err = dto.Validate();
@@ -118,7 +115,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpDelete("{email}"), Authorize]
+        [HttpDelete("{email}"), Authorize(Roles = "ADMIN")]
         public IResult DeleteVet(string email)
         {
             var task = Service.Delete(email);

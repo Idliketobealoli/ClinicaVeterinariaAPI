@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
-    [Authorize]
     [ApiController]
     [Route("history")]
     public class HistoryController
@@ -18,7 +17,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             Service = service;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "ADMIN,VET")]
         public IResult FindAllHistories()
         {
             var task = Service.FindAll();
@@ -27,7 +26,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
             return Results.Ok(task.Result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindHistoryByPetId(Guid id)
         {
             var task = Service.FindByPetId(id);
@@ -40,7 +39,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpGet("vaccinesonly/{id}")]
+        [HttpGet("vaccinesonly/{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindHistoryByPetIdVaccinesOnly(Guid id)
         {
             var task = Service.FindByPetIdVaccinesOnly(id);
@@ -53,7 +52,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpGet("ailmentonly/{id}")]
+        [HttpGet("ailmentonly/{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public IResult FindHistoryByPetIdAilmTreatOnly(Guid id)
         {
             var task = Service.FindByPetIdAilmTreatOnly(id);
@@ -66,7 +65,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPut("vaccine/{id}")]
+        [HttpPut("vaccine/{id}"), Authorize(Roles = "ADMIN,VET")]
         public IResult AddVaccine(Guid id, [FromBody] VaccineDTO vaccine)
         {
             var err = vaccine.Validate();
@@ -83,7 +82,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPost("ailment/{id}")]
+        [HttpPost("ailment/{id}"), Authorize(Roles = "ADMIN,VET")]
         public IResult AddAilmentTreatment(Guid id, [FromHeader] string ailment, [FromBody] string treatment)
         {
             var task = Service.AddAilmentTreatment(id, ailment, treatment);

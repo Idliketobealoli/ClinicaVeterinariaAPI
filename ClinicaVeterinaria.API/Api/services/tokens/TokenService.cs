@@ -18,8 +18,8 @@ namespace ClinicaVeterinaria.API.Api.services.tokens
                         new Claim("id", user.Id.ToString()),
                         new Claim("username", user.Name.ToString()),
                         new Claim("surname", user.Surname.ToString()),
-                        new Claim("Email", user.Email),
-                        new Claim("Role", Roles.ToString(user.Role)),
+                        new Claim("email", user.Email),
+                        new Claim("role", Roles.ToString(user.Role))
                     };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
