@@ -44,10 +44,10 @@ namespace ClinicaVeterinaria.TEST.Api.services
             UserDTO = new("owner", "test");
             DTO = new(
                 Entity.Id, "test", "testeado", "cat",
-                Sex.FEMALE, DateOnly.FromDateTime(DateTime.Now), 10.0, 15.0, HistoryDTO, UserDTO);
+                "FEMALE", DateOnly.FromDateTime(DateTime.Now).ToString(), 10.0, 15.0, HistoryDTO, UserDTO);
             DTOcreate = new(
                 "test", "testeado", "cat",
-                10.0, 15.0, Sex.FEMALE, DateOnly.FromDateTime(DateTime.Now), "uwu@gmail.com");
+                10.0, 15.0, "FEMALE", DateOnly.FromDateTime(DateTime.Now).ToString(), "uwu@gmail.com");
             DTOupdate = new(Entity.Id, "test", 2.0, 3.0);
             List = new List<Pet>() { Entity };
             ListDTO = new List<PetDTO>() { DTO };

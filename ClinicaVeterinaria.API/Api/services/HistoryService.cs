@@ -81,7 +81,8 @@ namespace ClinicaVeterinaria.API.Api.services
             var history = await HisRepo.FindByPetId(id);
             if (history != null)
             {
-                history.AilmentTreatment.TryAdd(ailment, treatment);
+                history.Ailments.Add(ailment);
+                history.Treatments.Add(treatment);
                 await HisRepo.Update(history.Id, history);
                 return new Either<HistoryDTO, string>(history.ToDTO());
             }

@@ -12,9 +12,6 @@ namespace ClinicaVeterinaria.API.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:hstore", ",,");
-
             migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
@@ -93,7 +90,8 @@ namespace ClinicaVeterinaria.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     PetId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AilmentTreatment = table.Column<Dictionary<string, string>>(type: "hstore", nullable: false)
+                    Ailments = table.Column<List<string>>(type: "text[]", nullable: false),
+                    Treatments = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {

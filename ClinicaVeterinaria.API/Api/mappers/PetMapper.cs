@@ -13,7 +13,7 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 pet.Name,
                 pet.Race,
                 pet.Species,
-                pet.Sex
+                Sexes.ToString(pet.Sex)
                 );
         }
 
@@ -25,8 +25,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 pet.Name,
                 pet.Race,
                 pet.Species,
-                pet.Sex,
-                pet.BirthDate,
+                Sexes.ToString(pet.Sex),
+                pet.BirthDate.ToString(),
                 pet.Weight,
                 pet.Size,
                 pet.History.ToDTO(),
@@ -44,8 +44,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 dto.Race,
                 dto.Weight,
                 dto.Size,
-                dto.Sex,
-                dto.Date,
+                Sexes.FromString(dto.Sex),
+                DateOnly.Parse(dto.Date),
                 dto.OwnerEmail
                 );
         }

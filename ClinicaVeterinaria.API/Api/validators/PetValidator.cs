@@ -1,5 +1,4 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
-using ClinicaVeterinaria.API.Api.errors;
 using System.Net.Mail;
 
 namespace ClinicaVeterinaria.API.Api.validators
@@ -34,13 +33,19 @@ namespace ClinicaVeterinaria.API.Api.validators
             else if (dto.Size <= 0)
                 return "Size must not be equal to or lower than 0.";
 
-            else if (dto.Date > DateOnly.FromDateTime(DateTime.Now))
-                return "Birth date must not be in the future.";
+            else {
+                if (DateOnly.TryParse(dto.Date, out DateOnly dt))
+                {
+                    if (dt > DateOnly.FromDateTime(DateTime.Now))
+                        return "Birth date must not be in the future.";
 
-            else if (!MailAddress.TryCreate(dto.OwnerEmail.Trim(), out _))
-                return "Incorrect owner email address expression.";
+                    else if (!MailAddress.TryCreate(dto.OwnerEmail.Trim(), out _))
+                        return "Incorrect owner email address expression.";
 
-            else return null;
+                    else return null;
+                }
+                else return "Birth date must be in a valid date format.";
+            }
         }
 
         public static string? Validate(this PetDTOupdate dto)

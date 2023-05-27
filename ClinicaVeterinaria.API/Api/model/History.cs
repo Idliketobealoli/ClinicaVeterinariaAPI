@@ -14,7 +14,8 @@ namespace ClinicaVeterinaria.API.Api.model
             Id = Guid.NewGuid();
             PetId = petId;
             Vaccines = new HashSet<Vaccine>();
-            AilmentTreatment = new Dictionary<string,string>();
+            Ailments = new();
+            Treatments = new();
         }
 
         [Required, Key]
@@ -23,6 +24,8 @@ namespace ClinicaVeterinaria.API.Api.model
         [Required]
         public HashSet<Vaccine> Vaccines { get; set; }
         [Required]
-        public Dictionary<string, string> AilmentTreatment { get; set; }
+        public List<string> Ailments { get; set; }
+        [Required]
+        public List<string> Treatments { get; set; }
     }
 }

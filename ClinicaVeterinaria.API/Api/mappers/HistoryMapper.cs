@@ -13,12 +13,19 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 var newVaccine = v.ToDTO();
                 vaccines.Add(newVaccine);
             }
+            Dictionary<string, string> ailmentTreatment = new();
+            int i = 0;
+            foreach (string ailment in history.Ailments)
+            {
+                ailmentTreatment[ailment] = history.Treatments[i];
+                i++;
+            }
 
             return new
                 (
                 history.PetId,
                 vaccines,
-                history.AilmentTreatment
+                ailmentTreatment
                 );
         }
 
@@ -36,7 +43,14 @@ namespace ClinicaVeterinaria.API.Api.mappers
 
         public static HistoryDTOailmentTreatment ToDTOailmentTreatment(this History history)
         {
-            return new(history.AilmentTreatment);
+            Dictionary<string, string> ailmentTreatment = new();
+            int i = 0;
+            foreach (string ailment in history.Ailments)
+            {
+                ailmentTreatment[ailment] = history.Treatments[i];
+                i++;
+            }
+            return new(ailmentTreatment);
         }
     }
 }

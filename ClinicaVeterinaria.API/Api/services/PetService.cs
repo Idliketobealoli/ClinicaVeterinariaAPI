@@ -58,9 +58,13 @@ namespace ClinicaVeterinaria.API.Api.services
             var user = await UserRepo.FindByEmail(dto.OwnerEmail);
             if (user != null)
             {
+                if (dto.Sex.ToUpper() != "MALE" && dto.Sex.ToUpper() != "FEMALE")
+                {
+                    return new Either<PetDTO, DomainError>
+                        (new PetErrorBadRequest("Could not create pet. Sex not defined correctly."));
+                }
                 var pet = dto.FromDTO();
                 var created = await PetRepo.Create(pet);
-                await HisRepo.Create(pet.History);
                 if (created != null)
                 {
                     return new Either<PetDTO, DomainError>(created.ToDTO(user));

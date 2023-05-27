@@ -7,7 +7,7 @@ namespace ClinicaVeterinaria.API.Api.dto
         public PetDTOshort
             (
             Guid id, string name,
-            string race, string species, Sex sex
+            string race, string species, string sex
             )
         {
             Id = id;
@@ -21,7 +21,7 @@ namespace ClinicaVeterinaria.API.Api.dto
         public string Name { get; set; }
         public string Race { get; set; }
         public string Species { get; set; }
-        public Sex Sex { get; set; }
+        public string Sex { get; set; }
     }
 
     public class PetDTO
@@ -29,8 +29,8 @@ namespace ClinicaVeterinaria.API.Api.dto
         public PetDTO
             (
             Guid id, string name,
-            string race, string species, Sex sex,
-            DateOnly birthDate, double weight, double size,
+            string race, string species, string sex,
+            string birthDate, double weight, double size,
             HistoryDTO history,UserDTOshort ownerDTO
             )
         {
@@ -50,8 +50,8 @@ namespace ClinicaVeterinaria.API.Api.dto
         public string Name { get; set; }
         public string Race { get; set; }
         public string Species { get; set; }
-        public Sex Sex { get; set; }
-        public DateOnly BirthDate { get; set; }
+        public string Sex { get; set; }
+        public string BirthDate { get; set; }
         public double Weight { get; set; }
         public double Size { get; set; }
         public HistoryDTO History { get; set; }
@@ -65,14 +65,14 @@ namespace ClinicaVeterinaria.API.Api.dto
         public string Race { get; set; }
         public double Weight { get; set; }
         public double Size { get; set; }
-        public Sex Sex { get; set; }
-        public DateOnly Date { get; set; }
+        public string Sex { get; set; }
+        public string Date { get; set; }
         public string OwnerEmail { get; set; }
 
         public PetDTOcreate(
             string name, string species, string race,
-            double weight, double size, Sex sex,
-            DateOnly date, string ownerEmail
+            double weight, double size, string sex,
+            string date, string ownerEmail
             )
         {
             Name = name;

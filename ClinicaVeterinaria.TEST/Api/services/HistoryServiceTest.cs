@@ -133,7 +133,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Assert.IsTrue(res.Result._isSuccess);
             Assert.IsNotNull(res.Result._successValue);
             Assert.IsNull(res.Result._errorValue);
-            Assert.AreEqual(EntityHistory.AilmentTreatment.Count, res.Result._successValue.AilmentTreatment.Count);
+            Assert.AreEqual(EntityHistory.Ailments.Count, res.Result._successValue.AilmentTreatment.Count);
         }
 
         [TestMethod]
@@ -188,7 +188,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Assert.IsTrue(res.Result._isSuccess);
             Assert.IsNotNull(res.Result._successValue);
             Assert.IsNull(res.Result._errorValue);
-            Assert.AreEqual(EntityHistory.AilmentTreatment.Count, res.Result._successValue.AilmentTreatment.Count);
+            Assert.AreEqual(EntityHistory.Ailments.Count, res.Result._successValue.AilmentTreatment.Count);
         }
 
         [TestMethod]

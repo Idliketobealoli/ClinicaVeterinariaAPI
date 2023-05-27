@@ -21,7 +21,6 @@ namespace ClinicaVeterinaria.API.Migrations
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "hstore");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("ClinicaVeterinaria.API.Api.model.Appointment", b =>
@@ -65,12 +64,16 @@ namespace ClinicaVeterinaria.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Dictionary<string, string>>("AilmentTreatment")
+                    b.Property<List<string>>("Ailments")
                         .IsRequired()
-                        .HasColumnType("hstore");
+                        .HasColumnType("text[]");
 
                     b.Property<Guid>("PetId")
                         .HasColumnType("uuid");
+
+                    b.Property<List<string>>("Treatments")
+                        .IsRequired()
+                        .HasColumnType("text[]");
 
                     b.HasKey("Id");
 
