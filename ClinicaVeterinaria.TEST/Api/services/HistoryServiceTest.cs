@@ -30,7 +30,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Service = new(HistoryRepo.Object, VaccineRepo.Object);
             EntityHistory = new(
                 Guid.Parse("d24e89f2-c97a-4e0d-ab07-f392a8ea5fd4"));
-            Vaccine = new("Vacuna1", DateOnly.FromDateTime(DateTime.Now));
+            Vaccine = new("Vacuna1", DateOnly.FromDateTime(DateTime.Now).ToString());
             VaccinesSet = new HashSet<VaccineDTO>() { Vaccine };
             ailmentTreatment = new Dictionary<string, string>() { { problema, tratamiento } };
             DTO = new(
@@ -156,7 +156,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             HistoryRepo.Setup(x => x.FindByPetId(It.IsAny<Guid>())).ReturnsAsync(EntityHistory, new TimeSpan(100));
 
             var res = Service.AddVaccine(Guid.NewGuid(),
-                new VaccineDTO("VacunaAdd", DateOnly.FromDateTime(DateTime.Now)));
+                new VaccineDTO("VacunaAdd", DateOnly.FromDateTime(DateTime.Now).ToString()));
 
             Assert.IsTrue(res.Result._isSuccess);
             Assert.IsNotNull(res.Result._successValue);
@@ -170,7 +170,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             HistoryRepo.Setup(x => x.FindByPetId(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
 
             var res = Service.AddVaccine(Guid.Empty,
-                new VaccineDTO("VacunaAdd", DateOnly.FromDateTime(DateTime.Now)));
+                new VaccineDTO("VacunaAdd", DateOnly.FromDateTime(DateTime.Now).ToString()));
 
             Assert.IsFalse(res.Result._isSuccess);
             Assert.IsNull(res.Result._successValue);

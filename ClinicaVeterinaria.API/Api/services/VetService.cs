@@ -1,4 +1,5 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
+using ClinicaVeterinaria.API.Api.errors;
 using ClinicaVeterinaria.API.Api.mappers;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services.bcrypt;
@@ -63,6 +64,11 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public virtual async Task<Either<VetDTOandToken, string>> Register(VetDTOregister dto, IConfiguration? config)
         {
+            if (dto.Role.ToUpper() != "VET" && dto.Role.ToUpper() != "ADMIN")
+            {
+                return new Either<VetDTOandToken, string>
+                    ("Could not create vet. Role not defined correctly.");
+            }
             var userByEmail = await Repo.FindByEmail(dto.Email);
             var userBySSNumber = await Repo.FindBySSNum(dto.SSNumber);
             if (userBySSNumber != null || userByEmail != null)

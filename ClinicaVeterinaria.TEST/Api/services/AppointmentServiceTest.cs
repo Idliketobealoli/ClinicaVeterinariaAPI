@@ -1,5 +1,4 @@
 using ClinicaVeterinaria.API.Api.dto;
-using ClinicaVeterinaria.API.Api.errors;
 using ClinicaVeterinaria.API.Api.model;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services;
@@ -19,6 +18,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         private List<AppointmentDTO> ListDTO;
         private Appointment EntityAppointment;
         private AppointmentDTO DTO;
+        private AppointmentDTOcreate DTOcreate;
         private UserDTOshort UserDto;
         private User UserTest;
         private PetDTOshort PetDtO;
@@ -36,6 +36,8 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Service = new AppointmentService(AppointmentRepo.Object, PetRepo.Object, UserRepo.Object, VetRepo.Object);
             EntityAppointment = new Appointment("prueba@prueba.com", DateTime.Now, DateTime.Now.AddHours(1),
                 Guid.Parse("7e2809eb-a756-4515-9646-aca4d58f6a01"), "Dato", "vet@vet.com");
+            DTOcreate = new("prueba@prueba.com", EntityAppointment.InitialDate.ToString(), EntityAppointment.FinishDate.ToString(),
+                "7e2809eb-a756-4515-9646-aca4d58f6a01", "Dato", "PENDING", "vet@vet.com");
             UserDto = new("Sebastian", "Mendoza");
             UserTest = new("Sebastian", "Mendoza", "sebs@mendoza.com", "000000000", "prueba");
             PetDtO = new(Guid.Parse("84ee5eff-afee-4c61-b835-3574af2d5c60"), "Danko", "Labrador", "Perro", "MALE");
@@ -43,7 +45,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
                 Sex.MALE, DateOnly.Parse("2004-10-15"), "sebs@mendoza.com");
             VetDtO = new("Daniel", "Rodriguez", "daro@mail.com");
             VetTest = new("Daniel", "Rodriguez", "daro@mail.com", "000000000", "prueba", Role.VET, "Animales exótico");
-            DTO = new(UserDto, DateTime.Now, DateTime.Now, PetDtO, "Dato", State.PENDING, VetDtO);
+            DTO = new(UserDto, DateTime.Now.ToString(), DateTime.Now.ToString(), PetDtO, "Dato", States.ToString(State.PENDING), VetDtO);
             ListAppointments = new List<Appointment>() { EntityAppointment };
             ListDTO = new List<AppointmentDTO>() { DTO };
         }
@@ -163,7 +165,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             AppointmentRepo.Setup(x => x.Create(It.IsAny<Appointment>()))
                 .ReturnsAsync(EntityAppointment, new TimeSpan(100));
 
-            var res = Service.Create(EntityAppointment);
+            var res = Service.Create(DTOcreate);
             res.Wait();
 
             Assert.IsTrue(res.Result._isSuccess);
@@ -175,14 +177,14 @@ namespace ClinicaVeterinaria.TEST.Api.services
         [TestMethod]
         public void CreateBadRequest()
         {
-            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(UserTest, new TimeSpan(100));
+            UserRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
             VetRepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(VetTest, new TimeSpan(100));
             AppointmentRepo.Setup(x => x.FindAll()).ReturnsAsync(ListAppointments, new TimeSpan(100));
             PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(PetTest, new TimeSpan(100));
             AppointmentRepo.Setup(x => x.Create(It.IsAny<Appointment>()))
                 .ReturnsAsync(EntityAppointment, new TimeSpan(100));
 
-            var res = Service.Create(EntityAppointment);
+            var res = Service.Create(DTOcreate);
             res.Wait();
 
             Assert.IsFalse(res.Result._isSuccess);

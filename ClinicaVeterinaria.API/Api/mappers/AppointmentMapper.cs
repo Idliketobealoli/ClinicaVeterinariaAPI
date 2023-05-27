@@ -14,11 +14,11 @@ namespace ClinicaVeterinaria.API.Api.mappers
             return new
                 (
                 user.ToDTOshort(),
-                appointment.InitialDate,
-                appointment.FinishDate,
+                appointment.InitialDate.ToString(),
+                appointment.FinishDate.ToString(),
                 pet.ToDTOshort(),
                 appointment.Issue,
-                appointment.State,
+                States.ToString(appointment.State),
                 vet.ToDTOappointment()
                 );
         }
@@ -31,8 +31,21 @@ namespace ClinicaVeterinaria.API.Api.mappers
             return new
                 (
                 appointment.Id,
-                appointment.InitialDate,
+                appointment.InitialDate.ToString(),
                 pet.ToDTOshort()
+                );
+        }
+
+        public static Appointment FromDTO(this AppointmentDTOcreate dto)
+        {
+            return new
+                (
+                dto.UserEmail,
+                DateTime.Parse(dto.InitialDate),
+                DateTime.Parse(dto.FinishDate),
+                Guid.Parse(dto.PetId),
+                dto.Issue,
+                dto.VetEmail
                 );
         }
     }

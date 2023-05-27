@@ -77,8 +77,16 @@ namespace ClinicaVeterinaria.API.Api.services
             }
         }
 
-        public virtual async Task<Either<AppointmentDTO, DomainError>> Create(Appointment appointment)
+        public virtual async Task<Either<AppointmentDTO, DomainError>> Create(AppointmentDTOcreate dto)
         {
+            if (dto.State.ToUpper() != "PENDING" &&
+                dto.State.ToUpper() != "PROGRESS" &&
+                dto.State.ToUpper() != "FINISHED")
+            {
+                return new Either<AppointmentDTO, DomainError>
+                    (new AppointmentErrorBadRequest("Incorrect state for the new appointment."));
+            }
+            var appointment = dto.FromDTO();
             var userByEmail = await UserRepo.FindByEmail(appointment.UserEmail);
             var vetByEmail = await VetRepo.FindByEmail(appointment.VetEmail);
             var allAppointments = await Repo.FindAll();

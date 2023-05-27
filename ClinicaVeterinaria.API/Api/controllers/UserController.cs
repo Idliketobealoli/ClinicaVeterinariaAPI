@@ -8,7 +8,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
 {
     [ApiController]
     [Route("users")]
-    public class UserController
+    public class UserController: ControllerBase
     {
         private readonly UserService Service;
         private readonly IConfiguration _configuration;
@@ -20,98 +20,98 @@ namespace ClinicaVeterinaria.API.Api.controllers
         }
 
         [HttpGet, Authorize(Roles = "ADMIN")]
-        public IResult FindAllUsers()
+        public ActionResult FindAllUsers()
         {
             var task = Service.FindAll();
             task.Wait();
 
-            return Results.Ok(task.Result);
+            return Ok(task.Result);
         }
 
         [HttpGet("{email}"), Authorize(Roles = "ADMIN,VET,USER")]
-        public IResult FindUserByEmail(string email)
+        public ActionResult FindUserByEmail(string email)
         {
             var task = Service.FindByEmail(email);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpGet("short/{email}"), Authorize(Roles = "ADMIN,VET,USER")]
-        public IResult FindUserByEmailShort(string email)
+        public ActionResult FindUserByEmailShort(string email)
         {
             var task = Service.FindByEmailShort(email);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpPost("register")]
-        public IResult RegisterUser([FromBody] UserDTOregister dto)
+        public ActionResult RegisterUser([FromBody] UserDTOregister dto)
         {
             var err = dto.Validate();
-            if (err != null) return Results.BadRequest(err);
+            if (err != null) return BadRequest(err);
 
             var task = Service.Register(dto, _configuration);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.BadRequest(x)
+                onSuccess: x => Ok(x),
+                onError: x => BadRequest(x)
                 );
         }
 
         [HttpPost("login")]
-        public IResult LoginUser([FromBody] UserDTOloginOrChangePassword dto)
+        public ActionResult LoginUser([FromBody] UserDTOloginOrChangePassword dto)
         {
             var err = dto.Validate();
-            if (err != null) return Results.BadRequest(err);
+            if (err != null) return BadRequest(err);
 
             var task = Service.Login(dto, _configuration);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.BadRequest(x)
+                onSuccess: x => Ok(x),
+                onError: x => BadRequest(x)
                 );
         }
 
         [HttpPut, Authorize(Roles = "USER")]
-        public IResult ChangeUserPassword([FromBody] UserDTOloginOrChangePassword dto)
+        public ActionResult ChangeUserPassword([FromBody] UserDTOloginOrChangePassword dto)
         {
             var err = dto.Validate();
-            if (err != null) return Results.BadRequest(err);
+            if (err != null) return BadRequest(err);
 
             var task = Service.ChangePassword(dto);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpDelete("{email}"), Authorize(Roles = "ADMIN,USER")]
-        public IResult DeleteUser(string email)
+        public ActionResult DeleteUser(string email)
         {
             var task = Service.Delete(email);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
     }

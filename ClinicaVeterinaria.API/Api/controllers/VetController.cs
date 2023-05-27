@@ -8,7 +8,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
 {
     [ApiController]
     [Route("vets")]
-    public class VetController
+    public class VetController: ControllerBase
     {
         private readonly VetService Service;
         private readonly IConfiguration _configuration;
@@ -20,111 +20,111 @@ namespace ClinicaVeterinaria.API.Api.controllers
         }
 
         [HttpGet, Authorize(Roles = "ADMIN")]
-        public IResult FindAllVets()
+        public ActionResult FindAllVets()
         {
             var task = Service.FindAll();
             task.Wait();
 
-            return Results.Ok(task.Result);
+            return Ok(task.Result);
         }
 
         [HttpGet("{email}"), Authorize(Roles = "ADMIN,VET,USER")]
-        public IResult FindVetByEmail(string email)
+        public ActionResult FindVetByEmail(string email)
         {
             var task = Service.FindByEmail(email);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpGet("short/{email}"), Authorize(Roles = "ADMIN,VET,USER")]
-        public IResult FindVetByEmailShort(string email)
+        public ActionResult FindVetByEmailShort(string email)
         {
             var task = Service.FindByEmailShort(email);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpGet("appointment/{email}"), Authorize(Roles = "ADMIN,VET,USER")]
-        public IResult FindVetByEmailAppointment(string email)
+        public ActionResult FindVetByEmailAppointment(string email)
         {
             var task = Service.FindByEmailAppointment(email);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpPost("register")]
-        public IResult RegisterVet([FromBody] VetDTOregister dto)
+        public ActionResult RegisterVet([FromBody] VetDTOregister dto)
         {
             var err = dto.Validate();
-            if (err != null) return Results.BadRequest(err);
+            if (err != null) return BadRequest(err);
 
             var task = Service.Register(dto, _configuration);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.BadRequest(x)
+                onSuccess: x => Ok(x),
+                onError: x => BadRequest(x)
                 );
         }
 
         [HttpPost("login")]
-        public IResult LoginVet([FromBody] VetDTOloginOrChangePassword dto)
+        public ActionResult LoginVet([FromBody] VetDTOloginOrChangePassword dto)
         {
             var err = dto.Validate();
-            if (err != null) return Results.BadRequest(err);
+            if (err != null) return BadRequest(err);
 
             var task = Service.Login(dto, _configuration);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.BadRequest(x)
+                onSuccess: x => Ok(x),
+                onError: x => BadRequest(x)
                 );
         }
 
         [HttpPut, Authorize(Roles = "ADMIN,VET")]
-        public IResult ChangeVetPassword([FromBody] VetDTOloginOrChangePassword dto)
+        public ActionResult ChangeVetPassword([FromBody] VetDTOloginOrChangePassword dto)
         {
             var err = dto.Validate();
-            if (err != null) return Results.BadRequest(err);
+            if (err != null) return BadRequest(err);
 
             var task = Service.ChangePassword(dto);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpDelete("{email}"), Authorize(Roles = "ADMIN")]
-        public IResult DeleteVet(string email)
+        public ActionResult DeleteVet(string email)
         {
             var task = Service.Delete(email);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
     }

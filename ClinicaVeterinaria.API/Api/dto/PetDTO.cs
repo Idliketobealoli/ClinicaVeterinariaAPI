@@ -1,5 +1,3 @@
-using ClinicaVeterinaria.API.Api.model;
-
 namespace ClinicaVeterinaria.API.Api.dto
 {
     public class PetDTOshort

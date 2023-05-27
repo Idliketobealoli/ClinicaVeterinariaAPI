@@ -10,7 +10,7 @@ namespace ClinicaVeterinaria.API.Api.mappers
             return new
                 (
                 vaccine.Name,
-                vaccine.Date
+                vaccine.Date.ToString()
                 );
         }
 
@@ -20,7 +20,7 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 (
                 petId,
                 dto.Name,
-                dto.Date
+                DateOnly.Parse(dto.Date)
                 );
         }
     }

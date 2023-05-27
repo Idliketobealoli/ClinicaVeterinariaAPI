@@ -8,7 +8,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
 {
     [ApiController]
     [Route("history")]
-    public class HistoryController
+    public class HistoryController: ControllerBase
     {
         private readonly HistoryService Service;
 
@@ -18,80 +18,80 @@ namespace ClinicaVeterinaria.API.Api.controllers
         }
 
         [HttpGet, Authorize(Roles = "ADMIN,VET")]
-        public IResult FindAllHistories()
+        public ActionResult FindAllHistories()
         {
             var task = Service.FindAll();
             task.Wait();
 
-            return Results.Ok(task.Result);
+            return Ok(task.Result);
         }
 
         [HttpGet("{id}"), Authorize(Roles = "ADMIN,VET,USER")]
-        public IResult FindHistoryByPetId(Guid id)
+        public ActionResult FindHistoryByPetId(Guid id)
         {
             var task = Service.FindByPetId(id);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpGet("vaccinesonly/{id}"), Authorize(Roles = "ADMIN,VET,USER")]
-        public IResult FindHistoryByPetIdVaccinesOnly(Guid id)
+        public ActionResult FindHistoryByPetIdVaccinesOnly(Guid id)
         {
             var task = Service.FindByPetIdVaccinesOnly(id);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpGet("ailmentonly/{id}"), Authorize(Roles = "ADMIN,VET,USER")]
-        public IResult FindHistoryByPetIdAilmTreatOnly(Guid id)
+        public ActionResult FindHistoryByPetIdAilmTreatOnly(Guid id)
         {
             var task = Service.FindByPetIdAilmTreatOnly(id);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpPut("vaccine/{id}"), Authorize(Roles = "ADMIN,VET")]
-        public IResult AddVaccine(Guid id, [FromBody] VaccineDTO vaccine)
+        public ActionResult AddVaccine(Guid id, [FromBody] VaccineDTO vaccine)
         {
             var err = vaccine.Validate();
             if (err != null)
-                return Results.BadRequest(err);
+                return BadRequest(err);
 
             var task = Service.AddVaccine(id, vaccine);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
 
         [HttpPost("ailment/{id}"), Authorize(Roles = "ADMIN,VET")]
-        public IResult AddAilmentTreatment(Guid id, [FromHeader] string ailment, [FromBody] string treatment)
+        public ActionResult AddAilmentTreatment(Guid id, [FromHeader] string ailment, [FromBody] string treatment)
         {
             var task = Service.AddAilmentTreatment(id, ailment, treatment);
             task.Wait();
 
-            return task.Result.Match
+            return task.Result.Match<ActionResult>
                 (
-                onSuccess: x => Results.Ok(x),
-                onError: x => Results.NotFound(x)
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
                 );
         }
     }

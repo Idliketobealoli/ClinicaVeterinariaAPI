@@ -43,11 +43,4 @@ namespace ClinicaVeterinaria.API.Api.model
         [Required]
         public string VetEmail { get; set; }
     }
-
-    public enum State
-    {
-        PENDING,
-        PROGRESS,
-        FINISHED
-    }
 }
