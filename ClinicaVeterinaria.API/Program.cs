@@ -26,20 +26,7 @@ namespace ClinicaVeterinaria.API
                 {
                     Version = "v1",
                     Title = "Clinica Veterinaria API",
-                    Description = "An ASP.NET Core Web API for managing a veterinary clinic.",
-                    /*
-                    TermsOfService = new Uri("https://example.com/terms"),
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Example Contact",
-                        Url = new Uri("https://example.com/contact")
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Example License",
-                        Url = new Uri("https://example.com/license")
-                    }
-                    */
+                    Description = "An ASP.NET Core Web API for managing a veterinary clinic."
                 });
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

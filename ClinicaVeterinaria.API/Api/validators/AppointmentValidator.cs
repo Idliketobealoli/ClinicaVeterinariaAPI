@@ -15,18 +15,18 @@ namespace ClinicaVeterinaria.API.Api.validators
             else if (!MailAddress.TryCreate(dto.VetEmail.Trim(), out _))
                 return "Incorrect vet email address expression.";
 
-            else if (DateOnly.TryParse(dto.InitialDate, out DateOnly dt))
+            else if (DateTime.TryParse(dto.InitialDate, out DateTime dt))
             {
-                if (dt > DateOnly.FromDateTime(DateTime.Now))
+                if (dt > DateTime.Now)
                     return "Initial date must not be in the future.";
-                else if (DateOnly.TryParse(dto.InitialDate, out DateOnly dt2)) {
-                    if (dt2 > DateOnly.FromDateTime(DateTime.Now))
+                else if (DateTime.TryParse(dto.InitialDate, out DateTime dt2)) {
+                    if (dt2 > DateTime.Now)
                         return "Finish date must not be in the future.";
                     else return null;
                 }
                 else return "Finsih date must be in a valid date format.";
             }
-            else return "Initial date must be in a valid date format.";
+            else return $"Initial date must be in a valid date format.";
         }
     }
 }

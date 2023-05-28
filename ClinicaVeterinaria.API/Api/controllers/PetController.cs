@@ -18,6 +18,13 @@ namespace ClinicaVeterinaria.API.Api.controllers
             Service = service;
         }
 
+        /// <summary>
+        /// Finds all pets stored in the database.
+        /// </summary>
+        /// <returns>
+        /// A list containing all pets.
+        /// </returns>
+        /// <response code="200" />
         [HttpGet, Authorize(Roles = "ADMIN,VET")]
         public ActionResult FindAllPets()
         {
@@ -27,6 +34,14 @@ namespace ClinicaVeterinaria.API.Api.controllers
             return Ok(task.Result);
         }
 
+        /// <summary>
+        /// Finds a pet with the corresponing ID.
+        /// </summary>
+        /// <returns>
+        /// The pet, or a not found error.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="404" />
         [HttpGet("{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult FindPetById(Guid id)
         {
@@ -40,6 +55,15 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Creates a pet.
+        /// </summary>
+        /// <returns>
+        /// The pet, or an error response.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="400" />
+        /// <response code="404" />
         [HttpPost, Authorize(Roles = "ADMIN,VET")]
         public ActionResult CreatePet([FromBody] PetDTOcreate dto)
         {
@@ -63,6 +87,15 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Updates the pet with the same ID as the one in the body.
+        /// </summary>
+        /// <returns>
+        /// The history, or an error response.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="400" />
+        /// <response code="404" />
         [HttpPut, Authorize(Roles = "ADMIN,VET")]
         public ActionResult UpdatePet([FromBody] PetDTOupdate dto)
         {
@@ -79,6 +112,15 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Deletes the pet whose ID matches the one given.
+        /// </summary>
+        /// <returns>
+        /// The pet, or an error response.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="400" />
+        /// <response code="404" />
         [HttpDelete("{id}"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult DeletePet(Guid id)
         {

@@ -17,6 +17,13 @@ namespace ClinicaVeterinaria.API.Api.controllers
             Service = service;
         }
 
+        /// <summary>
+        /// Finds all histories present in the database.
+        /// </summary>
+        /// <returns>
+        /// A list containing all histories.
+        /// </returns>
+        /// <response code="200" />
         [HttpGet, Authorize(Roles = "ADMIN,VET")]
         public ActionResult FindAllHistories()
         {
@@ -26,6 +33,14 @@ namespace ClinicaVeterinaria.API.Api.controllers
             return Ok(task.Result);
         }
 
+        /// <summary>
+        /// Finds a history by its pet ID.
+        /// </summary>
+        /// <returns>
+        /// The history, or a not found error.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="404" />
         [HttpGet("{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult FindHistoryByPetId(Guid id)
         {
@@ -39,6 +54,14 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Finds a history by its pet ID, but only returns the vaccination history.
+        /// </summary>
+        /// <returns>
+        /// The history, or a not found error.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="404" />
         [HttpGet("vaccinesonly/{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult FindHistoryByPetIdVaccinesOnly(Guid id)
         {
@@ -52,6 +75,14 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Finds a history by its pet ID, but only returns the ailment and treament history.
+        /// </summary>
+        /// <returns>
+        /// The history, or a not found error.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="404" />
         [HttpGet("ailmentonly/{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult FindHistoryByPetIdAilmTreatOnly(Guid id)
         {
@@ -65,6 +96,15 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Adds a vaccine to the history that corresponds with the given petId.
+        /// </summary>
+        /// <returns>
+        /// The history, or an error response.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="400" />
+        /// <response code="404" />
         [HttpPut("vaccine/{id}"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult AddVaccine(Guid id, [FromBody] VaccineDTO vaccine)
         {
@@ -82,6 +122,14 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Adds an ailment-treatment pair to the history that corresponds with the given petId.
+        /// </summary>
+        /// <returns>
+        /// The history, or a not found error.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="404" />
         [HttpPost("ailment/{id}"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult AddAilmentTreatment(Guid id, [FromHeader] string ailment, [FromBody] string treatment)
         {

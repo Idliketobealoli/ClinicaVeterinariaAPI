@@ -1,6 +1,5 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.errors;
-using ClinicaVeterinaria.API.Api.model;
 using ClinicaVeterinaria.API.Api.services;
 using ClinicaVeterinaria.API.Api.validators;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +19,13 @@ namespace ClinicaVeterinaria.API.Api.controllers
             Service = service;
         }
 
+        /// <summary>
+        /// Finds all appointments in the database.
+        /// </summary>
+        /// <returns>
+        /// A list of all appointments.
+        /// </returns>
+        /// <response code="200" />
         [HttpGet]
         public ActionResult FindAllAppointments()
         {
@@ -29,6 +35,14 @@ namespace ClinicaVeterinaria.API.Api.controllers
             return Ok(task.Result);
         }
 
+        /// <summary>
+        /// Finds an appointment by its ID.
+        /// </summary>
+        /// <returns>
+        /// The appointment, if found.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="404" />
         [HttpGet]
         public ActionResult FindAppointmentById(Guid id)
         {
@@ -42,6 +56,15 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Creates an appointment, if the body of the request is valid and it can be created.
+        /// </summary>
+        /// <returns>
+        /// The appointment, or an error response.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="400" />
+        /// <response code="404" />
         [HttpPost]
         public ActionResult CreateAppointment([FromBody] AppointmentDTOcreate appointment)
         {
@@ -65,6 +88,15 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Deletes an appointment by ID.
+        /// </summary>
+        /// <returns>
+        /// The appointment, or an error response.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="400" />
+        /// <response code="404" />
         [HttpDelete("{id}")]
         public ActionResult DeleteAppointment(Guid id)
         {
