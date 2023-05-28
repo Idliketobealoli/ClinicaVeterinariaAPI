@@ -43,7 +43,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// </returns>
         /// <response code="200" />
         /// <response code="404" />
-        [HttpGet]
+        [HttpGet("{id}")]
         public ActionResult FindAppointmentById(Guid id)
         {
             var task = Service.FindById(id);
