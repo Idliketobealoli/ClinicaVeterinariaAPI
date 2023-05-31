@@ -59,7 +59,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             Repo.Setup(x => x.FindAll()).ReturnsAsync(List, new TimeSpan(100));
 
-            var res = Service.FindAll();
+            var res = Service.FindAll(null);
             res.Wait();
 
             Assert.IsNotNull(res.Result);
@@ -72,7 +72,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             Repo.Setup(x => x.FindAll()).ReturnsAsync(new(), new TimeSpan(100));
 
-            var res = Service.FindAll();
+            var res = Service.FindAll(null);
             res.Wait();
 
             Assert.IsNotNull(res.Result);

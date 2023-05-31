@@ -56,7 +56,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             AppointmentRepo.Setup(x => x.FindAll()).ReturnsAsync(ListAppointments, new TimeSpan(100));
             PetRepo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(PetTest, new TimeSpan(100));
 
-            var res = Service.FindAll();
+            var res = Service.FindAll(null, null, null);
             res.Wait();
 
             Assert.IsNotNull(res.Result);
@@ -69,7 +69,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             AppointmentRepo.Setup(x => x.FindAll()).ReturnsAsync(new(), new TimeSpan(100));
 
-            var res = Service.FindAll();
+            var res = Service.FindAll(null, null, null);
             res.Wait();
 
             Assert.IsNotNull(res.Result);
