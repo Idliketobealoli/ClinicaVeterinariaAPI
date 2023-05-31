@@ -20,14 +20,14 @@
             };
         }
 
-        public static State FromString(string state)
+        public static State? FromString(string state)
         {
             return state.ToUpper() switch
             {
                 "PENDING" => State.PENDING,
                 "PROGRESS" => State.PROGRESS,
                 "FINISHED" => State.FINISHED,
-                _ => State.PENDING
+                _ => null
             };
         }
     }

@@ -4,6 +4,7 @@ using ClinicaVeterinaria.API.Api.services;
 using ClinicaVeterinaria.API.Api.validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
@@ -27,9 +28,10 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// </returns>
         /// <response code="200" />
         [HttpGet]
-        public ActionResult FindAllAppointments()
+        public ActionResult FindAllAppointments(string? userEmail, string? vetEmail, string? date)
         {
-            var task = Service.FindAll();
+            _ = DateOnly.TryParse(date, out DateOnly dateOnly);
+            var task = Service.FindAll(userEmail, vetEmail, dateOnly);
             task.Wait();
 
             return Ok(task.Result);
@@ -72,6 +74,26 @@ namespace ClinicaVeterinaria.API.Api.controllers
             if (err != null) return BadRequest(err);
 
             var task = Service.Create(appointment);
+            task.Wait();
+
+            return task.Result.Match<ActionResult>
+                (
+                onSuccess: x => Ok(x),
+                onError: x =>
+                {
+                    if (x is AppointmentErrorBadRequest)
+                    {
+                        return BadRequest(x.Message);
+                    }
+                    else return NotFound(x.Message);
+                }
+                );
+        }
+
+        [HttpPatch("{id}")]
+        public ActionResult UpdateAppointment(Guid id, [Required] string state)
+        {
+            var task = Service.UpdateState(id, state);
             task.Wait();
 
             return task.Result.Match<ActionResult>

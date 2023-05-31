@@ -25,9 +25,12 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public PetService() { }
 
-        public virtual async Task<List<PetDTOshort>> FindAll()
+        public virtual async Task<List<PetDTOshort>> FindAll(string? email)
         {
             var pets = await PetRepo.FindAll();
+
+            if (email != null) { pets = pets.FindAll(p => p.OwnerEmail == email) ?? new(); }
+
             var petsDTO = new List<PetDTOshort>();
             foreach (var pet in pets)
             {

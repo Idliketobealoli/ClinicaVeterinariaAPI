@@ -27,9 +27,14 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public AppointmentService() { }
 
-        public virtual async Task<List<AppointmentDTOshort>> FindAll()
+        public virtual async Task<List<AppointmentDTOshort>> FindAll(string? userEmail, string? vetEmail, DateOnly? date)
         {
             var entities = await Repo.FindAll();
+
+            if (userEmail != null) { entities = entities.FindAll(e => e.UserEmail == userEmail) ?? new(); }
+            if (vetEmail != null) { entities = entities.FindAll(e => e.VetEmail == vetEmail) ?? new(); }
+            if (date != null) { entities = entities.FindAll(e => e.InitialDate.Day == date.Value.Day) ?? new(); }
+
             var entitiesDTOs = new List<AppointmentDTOshort>();
             foreach (var entity in entities)
             {
@@ -117,6 +122,29 @@ namespace ClinicaVeterinaria.API.Api.services
             else
                 return new Either<AppointmentDTO, DomainError>
                     (new AppointmentErrorBadRequest("Incorrect data for the new appointment."));
+        }
+
+        public virtual async Task<Either<AppointmentDTO, DomainError>> UpdateState (Guid id, string state)
+        {
+            var updated = await Repo.UpdateState(id, States.FromString(state));
+
+            if (updated == null)
+            {
+                return new Either<AppointmentDTO, DomainError>
+                    (new AppointmentErrorBadRequest($"Unable to change state of appointment with ID: {id}"));
+            }
+            var userByEmail = await UserRepo.FindByEmail(updated.UserEmail);
+            var vetByEmail = await VetRepo.FindByEmail(updated.VetEmail);
+            var pet = await PetRepo.FindById(updated.PetId);
+
+            if (userByEmail == null || vetByEmail == null || pet == null)
+            {
+                return new Either<AppointmentDTO, DomainError>
+                    (new AppointmentErrorNotFound($"Incorrect data for the appointment."));
+            }
+
+            return new Either<AppointmentDTO, DomainError>
+                    (updated.ToDTO(userByEmail, pet, vetByEmail));
         }
 
         public virtual async Task<Either<AppointmentDTO, DomainError>> Delete(Guid id)

@@ -35,6 +35,19 @@ namespace ClinicaVeterinaria.API.Api.repositories
             return appointment;
         }
 
+        public virtual async Task<Appointment?> UpdateState(Guid id, State? state)
+        {
+            if (state == null) { return null; }
+            var appointment = await Context.Appointments.FirstOrDefaultAsync(u => u.Id == id);
+            if (appointment != null)
+            {
+                appointment.State = state.Value;
+                Context.Appointments.Update(appointment);
+                await Context.SaveChangesAsync();
+            }
+            return appointment;
+        }
+
         public virtual async Task<Appointment?> Delete(Guid id)
         {
             var found = Context.Appointments.FirstOrDefault(u => u.Id == id);
