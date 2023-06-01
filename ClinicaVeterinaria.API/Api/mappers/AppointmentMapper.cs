@@ -43,8 +43,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
             return new
                 (
                 dto.UserEmail,
-                new DateTime(iDate.Year, iDate.Month, iDate.Day, iDate.Hour, 0, 0, DateTimeKind.Utc),
-                new DateTime(fDate.Year, fDate.Month, fDate.Day, fDate.Hour, 0, 0, DateTimeKind.Utc),
+                new DateTime(iDate.Year, iDate.Month, iDate.Day, iDate.Hour, iDate.Minute, 0, DateTimeKind.Utc),
+                new DateTime(fDate.Year, fDate.Month, fDate.Day, fDate.Hour, fDate.Minute, 0, DateTimeKind.Utc),
                 Guid.Parse(dto.PetId),
                 dto.Issue,
                 dto.VetEmail
