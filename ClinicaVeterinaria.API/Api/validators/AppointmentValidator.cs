@@ -12,7 +12,7 @@ namespace ClinicaVeterinaria.API.Api.validators
             else if (!MailAddress.TryCreate(dto.UserEmail.Trim(), out _))
                 return "Incorrect user email address expression.";
 
-            else if (!MailAddress.TryCreate(dto.VetEmail.Trim(), out _))
+            else if (dto.VetEmail != null && !MailAddress.TryCreate(dto.VetEmail.Trim(), out _))
                 return "Incorrect vet email address expression.";
 
             else if (DateTime.TryParse(dto.InitialDate, out DateTime dt))

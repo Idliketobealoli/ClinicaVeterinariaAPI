@@ -4,6 +4,7 @@ namespace ClinicaVeterinaria.API.Api.dto
 {
     public class AppointmentDTO
     {
+        public Guid Id { get; set; }
         public UserDTOshort User { get; set; }
         public string InitialDate { get; set; }
         public string FinishDate { get; set; }
@@ -14,6 +15,7 @@ namespace ClinicaVeterinaria.API.Api.dto
 
         public AppointmentDTO
             (
+            Guid id,
             UserDTOshort user,
             string initialDate,
             string finishDate,
@@ -23,6 +25,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             VetDTOappointment vet
             )
         {
+            Id = id;
             User = user;
             InitialDate = initialDate;
             FinishDate = finishDate;
@@ -60,13 +63,13 @@ namespace ClinicaVeterinaria.API.Api.dto
         public string PetId { get; set; }
         public string Issue { get; set; }
         public string State { get; set; }
-        public string VetEmail { get; set; }
+        public string? VetEmail { get; set; }
 
         public AppointmentDTOcreate
             (
             string userEmail, string initialDate,
             string finishDate, string petId, string issue,
-            string state, string vetEmail
+            string state, string? vetEmail
             )
         {
             UserEmail = userEmail;

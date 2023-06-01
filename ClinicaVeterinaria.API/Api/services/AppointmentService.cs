@@ -91,7 +91,7 @@ namespace ClinicaVeterinaria.API.Api.services
                 return new Either<AppointmentDTO, DomainError>
                     (new AppointmentErrorBadRequest("Incorrect state for the new appointment."));
             }
-            var appointment = dto.FromDTO();
+            var appointment = dto.FromDTO(VetRepo);
             var userByEmail = await UserRepo.FindByEmail(appointment.UserEmail);
             var vetByEmail = await VetRepo.FindByEmail(appointment.VetEmail);
             var allAppointments = await Repo.FindAll();
