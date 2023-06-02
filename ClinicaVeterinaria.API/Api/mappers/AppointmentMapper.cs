@@ -34,6 +34,7 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 (
                 appointment.Id,
                 appointment.InitialDate.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                appointment.Issue,
                 pet.ToDTOshort()
                 );
         }

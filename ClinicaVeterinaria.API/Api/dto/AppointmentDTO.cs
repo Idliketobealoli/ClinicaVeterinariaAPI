@@ -1,6 +1,4 @@
-﻿using ClinicaVeterinaria.API.Api.model;
-
-namespace ClinicaVeterinaria.API.Api.dto
+﻿namespace ClinicaVeterinaria.API.Api.dto
 {
     public class AppointmentDTO
     {
@@ -40,17 +38,20 @@ namespace ClinicaVeterinaria.API.Api.dto
     {
         public Guid Id { get; set; }
         public string InitialDate { get; set; }
+        public string Issue { get; set; }
         public PetDTOshort Pet { get; set; }
 
         public AppointmentDTOshort
             (
             Guid id,
             string initialDate,
+            string issue,
             PetDTOshort pet
             )
         {
             Id = id;
             InitialDate = initialDate;
+            Issue = issue;
             Pet = pet;
         }
     }

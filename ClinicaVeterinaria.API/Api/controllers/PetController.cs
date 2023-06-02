@@ -25,7 +25,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// A list containing all pets.
         /// </returns>
         /// <response code="200" />
-        [HttpGet, Authorize(Roles = "ADMIN,VET")]
+        [HttpGet, Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult FindAllPets(string? email)
         {
             var task = Service.FindAll(email);

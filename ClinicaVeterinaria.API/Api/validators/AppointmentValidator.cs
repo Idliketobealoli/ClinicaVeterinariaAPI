@@ -17,11 +17,11 @@ namespace ClinicaVeterinaria.API.Api.validators
 
             else if (DateTime.TryParse(dto.InitialDate, out DateTime dt))
             {
-                if (dt > DateTime.Now)
-                    return "Initial date must not be in the future.";
+                if (dt < DateTime.Now)
+                    return "Initial date must not be in the past.";
                 else if (DateTime.TryParse(dto.InitialDate, out DateTime dt2)) {
-                    if (dt2 > DateTime.Now)
-                        return "Finish date must not be in the future.";
+                    if (dt2 < DateTime.Now)
+                        return "Finish date must not be in the past.";
                     else return null;
                 }
                 else return "Finsih date must be in a valid date format.";

@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
-    [Authorize(Roles = "ADMIN,VET,USER")]
     [ApiController]
     [Route("appointments")]
     public class AppointmentController: ControllerBase
@@ -27,12 +26,13 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// A list of all appointments.
         /// </returns>
         /// <response code="200" />
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult FindAllAppointments(string? userEmail, string? vetEmail, string? date)
         {
-            var successfull = DateOnly.TryParse(date, out DateOnly dateOnly);
+            var successful = DateOnly.TryParse(date, out DateOnly dateOnly);
             Task<List<AppointmentDTOshort>> task;
-            if (successfull) { task = Service.FindAll(userEmail, vetEmail, dateOnly); }
+            if (successful) { task = Service.FindAll(userEmail, vetEmail, dateOnly); }
+            else if (!successful && date != null) { return BadRequest("Date is not in a valid format."); }
             else task = Service.FindAll(userEmail, vetEmail, null);
             task.Wait();
 
@@ -47,7 +47,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// </returns>
         /// <response code="200" />
         /// <response code="404" />
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult FindAppointmentById(Guid id)
         {
             var task = Service.FindById(id);
@@ -69,7 +69,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// <response code="200" />
         /// <response code="400" />
         /// <response code="404" />
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult CreateAppointment([FromBody] AppointmentDTOcreate appointment)
         {
             var err = appointment.Validate();
@@ -92,7 +92,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult UpdateAppointment(Guid id, [Required] string state)
         {
             var task = Service.UpdateState(id, state);
@@ -121,7 +121,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// <response code="200" />
         /// <response code="400" />
         /// <response code="404" />
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "ADMIN,VET,USER")]
         public ActionResult DeleteAppointment(Guid id)
         {
             var task = Service.Delete(id);
