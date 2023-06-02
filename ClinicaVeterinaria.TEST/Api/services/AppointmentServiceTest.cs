@@ -45,7 +45,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
                 Sex.MALE, DateOnly.Parse("2004-10-15"), "sebs@mendoza.com");
             VetDtO = new("Daniel", "Rodriguez", "daro@mail.com");
             VetTest = new("Daniel", "Rodriguez", "daro@mail.com", "000000000", "prueba", Role.VET, "Animales exótico");
-            DTO = new(UserDto, DateTime.Now.ToString(), DateTime.Now.ToString(), PetDtO, "Dato", States.ToString(State.PENDING), VetDtO);
+            DTO = new(Guid.NewGuid(), UserDto, DateTime.Now.ToString(), DateTime.Now.ToString(), PetDtO, "Dato", States.ToString(State.PENDING), VetDtO);
             ListAppointments = new List<Appointment>() { EntityAppointment };
             ListDTO = new List<AppointmentDTO>() { DTO };
         }

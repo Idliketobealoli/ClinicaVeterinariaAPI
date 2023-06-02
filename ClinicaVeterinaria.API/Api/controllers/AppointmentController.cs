@@ -30,8 +30,10 @@ namespace ClinicaVeterinaria.API.Api.controllers
         [HttpGet]
         public ActionResult FindAllAppointments(string? userEmail, string? vetEmail, string? date)
         {
-            _ = DateOnly.TryParse(date, out DateOnly dateOnly);
-            var task = Service.FindAll(userEmail, vetEmail, dateOnly);
+            var successfull = DateOnly.TryParse(date, out DateOnly dateOnly);
+            Task<List<AppointmentDTOshort>> task;
+            if (successfull) { task = Service.FindAll(userEmail, vetEmail, dateOnly); }
+            else task = Service.FindAll(userEmail, vetEmail, null);
             task.Wait();
 
             return Ok(task.Result);
