@@ -13,7 +13,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 user.Name,
                 user.Surname,
                 user.Email,
-                user.Phone
+                user.Phone,
+                user.Active
                 );
         }
 
@@ -34,7 +35,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 dto.Surname,
                 dto.Email,
                 dto.Phone,
-                CipherService.Encode(dto.Password)
+                CipherService.Encode(dto.Password),
+                true
                 );
         }
 

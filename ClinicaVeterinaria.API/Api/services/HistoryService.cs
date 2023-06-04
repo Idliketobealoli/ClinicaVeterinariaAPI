@@ -1,5 +1,6 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.mappers;
+using ClinicaVeterinaria.API.Api.model;
 using ClinicaVeterinaria.API.Api.repositories;
 
 namespace ClinicaVeterinaria.API.Api.services
@@ -8,11 +9,13 @@ namespace ClinicaVeterinaria.API.Api.services
     {
         private readonly HistoryRepository HisRepo;
         private readonly VaccineRepository VacRepo;
+        private readonly AilmentTreatmentRepository AilRepo;
 
-        public HistoryService(HistoryRepository hisRepo, VaccineRepository vacRepo)
+        public HistoryService(HistoryRepository hisRepo, VaccineRepository vacRepo, AilmentTreatmentRepository ailRepo)
         {
             HisRepo = hisRepo;
             VacRepo = vacRepo;
+            AilRepo = ailRepo;
         }
 
         public HistoryService() { }
@@ -23,7 +26,7 @@ namespace ClinicaVeterinaria.API.Api.services
             var entitiesDTOs = new List<HistoryDTO>();
             foreach (var entity in entities)
             {
-                entitiesDTOs.Add(entity.ToDTO());
+                entitiesDTOs.Add(entity.ToDTO(VacRepo, AilRepo));
             }
             return entitiesDTOs;
         }
@@ -36,7 +39,7 @@ namespace ClinicaVeterinaria.API.Api.services
                 return new Either<HistoryDTO, string>
                     ($"History with PetId {id} not found.");
             }
-            else return new Either<HistoryDTO, string>(entity.ToDTO());
+            else return new Either<HistoryDTO, string>(entity.ToDTO(VacRepo, AilRepo));
         }
 
         public virtual async Task<Either<HistoryDTOvaccines, string>> FindByPetIdVaccinesOnly(Guid id)
@@ -47,7 +50,7 @@ namespace ClinicaVeterinaria.API.Api.services
                 return new Either<HistoryDTOvaccines, string>
                     ($"History with PetId {id} not found.");
             }
-            else return new Either<HistoryDTOvaccines, string>(entity.ToDTOvaccines());
+            else return new Either<HistoryDTOvaccines, string>(entity.ToDTOvaccines(VacRepo));
         }
 
         public virtual async Task<Either<HistoryDTOailmentTreatment, string>> FindByPetIdAilmTreatOnly(Guid id)
@@ -58,7 +61,7 @@ namespace ClinicaVeterinaria.API.Api.services
                 return new Either<HistoryDTOailmentTreatment, string>
                     ($"History with PetId {id} not found.");
             }
-            else return new Either<HistoryDTOailmentTreatment, string>(entity.ToDTOailmentTreatment());
+            else return new Either<HistoryDTOailmentTreatment, string>(entity.ToDTOailmentTreatment(AilRepo));
         }
 
         public virtual async Task<Either<HistoryDTO, string>> AddVaccine(Guid id, VaccineDTO vaccine)
@@ -67,32 +70,22 @@ namespace ClinicaVeterinaria.API.Api.services
             if (history != null)
             {
                 var newVaccine = vaccine.FromDTO(id);
-                var success = history.Vaccines.Add(newVaccine);
-                if (success)
-                {
-                    await VacRepo.Create(newVaccine);
-                    await HisRepo.Update(history.Id, history);
-                    return new Either<HistoryDTO, string>(history.ToDTO());
-                }
-                else
-                {
-                    return new Either<HistoryDTO, string>
-                    ($"Could not add vaccine.");
-                }
+                await VacRepo.Create(newVaccine);
+                //await HisRepo.Update(history.Id, history);
+                return new Either<HistoryDTO, string>(history.ToDTO(VacRepo, AilRepo));
             }
             else return new Either<HistoryDTO, string>
                     ($"History with PetId {id} not found.");
         }
 
-        public virtual async Task<Either<HistoryDTO, string>> AddAilmentTreatment(Guid id, string ailment, string treatment)
+        public virtual async Task<Either<HistoryDTO, string>> AddAilmentTreatment(Guid id, AilmentTreatmentDTO ailmentTreatment)
         {
             var history = await HisRepo.FindByPetId(id);
             if (history != null)
             {
-                history.Ailments.Add(ailment);
-                history.Treatments.Add(treatment);
-                await HisRepo.Update(history.Id, history);
-                return new Either<HistoryDTO, string>(history.ToDTO());
+                var newAT = ailmentTreatment.FromDTO(id);
+                await AilRepo.Create(newAT);
+                return new Either<HistoryDTO, string>(history.ToDTO(VacRepo, AilRepo));
             }
             else return new Either<HistoryDTO, string>
                     ($"History with PetId {id} not found.");

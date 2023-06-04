@@ -32,13 +32,13 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Service = new(Repo.Object);
             Entity = new(
                 "test", "testeado", "uwu@gmail.com",
-                "123456789", "uwu1234", Role.VET, "qwerty");
+                "123456789", "uwu1234", Role.VET, "qwerty", true);
             EntityLogin = new(
                 "test", "testeado", "uwu@gmail.com",
-                "123456789", CipherService.Encode("uwu1234"), Role.VET, "qwerty");
+                "123456789", CipherService.Encode("uwu1234"), Role.VET, "qwerty", true);
             DTO = new(
                 "test", "testeado", "uwu@gmail.com",
-                "123456789", Role.VET, "qwerty");
+                "123456789", Role.VET, "qwerty", true);
             DTOShort = new("test", "testeado");
             DTOandToken = new(DTO, "");
             List = new List<Vet>() { Entity };
@@ -49,7 +49,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
                 Roles.ToString(Role.VET), "qwerty");
             DTOupdate = new("uwu@gmail.com", "1234uwu");
             DTOlogin = new("uwu@gmail.com", "uwu1234");
-            DTOappointment = new("test", "testeado2", "email2@gmail.com");
+            DTOappointment = new("test", "testeado2", "email2@gmail.com", true);
         }
 
         [TestMethod]
@@ -256,7 +256,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         [TestMethod]
         public void DeleteOk()
         {
-            Repo.Setup(x => x.Delete(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
+            Repo.Setup(x => x.SwitchActivity(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
 
             var res = Service.Delete("uwu@gmail.com");
             res.Wait();
@@ -270,7 +270,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         [TestMethod]
         public void DeleteError()
         {
-            Repo.Setup(x => x.Delete(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
+            Repo.Setup(x => x.SwitchActivity(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
 
             var res = Service.Delete("uwu@gmail.com");
             res.Wait();

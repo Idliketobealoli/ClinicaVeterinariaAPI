@@ -46,7 +46,7 @@ namespace ClinicaVeterinaria.API.Api.repositories
             if (found != null)
             {
                 history.Id = found.Id;
-                Context.Histories.Update(history);
+                var res = Context.Histories.Update(history);
                 await Context.SaveChangesAsync();
 
                 return history;

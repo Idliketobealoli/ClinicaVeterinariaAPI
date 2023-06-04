@@ -10,7 +10,7 @@ namespace ClinicaVeterinaria.API.Api.model
             (
             Guid id, string name, string species, string race,
             double weight, double size, Sex sex, DateOnly birthDate,
-            string ownerEmail
+            string ownerEmail, bool active
             )
         {
             Id = id;
@@ -23,6 +23,7 @@ namespace ClinicaVeterinaria.API.Api.model
             BirthDate = birthDate;
             OwnerEmail = ownerEmail;
             History = new History(id);
+            Active = active;
         }
 
         [Required, Key]
@@ -45,5 +46,8 @@ namespace ClinicaVeterinaria.API.Api.model
         public string OwnerEmail { get; set; }
         [Required]
         public History History { get; set; }
+
+        [Required]
+        public bool Active { get; set; }
     }
 }

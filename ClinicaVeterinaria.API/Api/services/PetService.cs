@@ -11,16 +11,19 @@ namespace ClinicaVeterinaria.API.Api.services
         private readonly UserRepository UserRepo;
         private readonly HistoryRepository HisRepo;
         private readonly VaccineRepository VacRepo;
+        private readonly AilmentTreatmentRepository AilRepo;
 
         public PetService(
             PetRepository petRepo, UserRepository userRepo,
-            HistoryRepository hisRepo, VaccineRepository vacRepo
+            HistoryRepository hisRepo, VaccineRepository vacRepo,
+            AilmentTreatmentRepository ailRepo
             )
         {
             PetRepo = petRepo;
             UserRepo = userRepo;
             HisRepo = hisRepo;
             VacRepo = vacRepo;
+            AilRepo = ailRepo;
         }
 
         public PetService() { }
@@ -53,7 +56,7 @@ namespace ClinicaVeterinaria.API.Api.services
                 return new Either<PetDTO, string>
                     ($"User with email {pet.OwnerEmail} not found.");
             }
-            else return new Either<PetDTO, string>(pet.ToDTO(owner));
+            else return new Either<PetDTO, string>(pet.ToDTO(owner, VacRepo, AilRepo));
         }
 
         public virtual async Task<Either<PetDTO, DomainError>> Create(PetDTOcreate dto)
@@ -70,7 +73,7 @@ namespace ClinicaVeterinaria.API.Api.services
                 var created = await PetRepo.Create(pet);
                 if (created != null)
                 {
-                    return new Either<PetDTO, DomainError>(created.ToDTO(user));
+                    return new Either<PetDTO, DomainError>(created.ToDTO(user, VacRepo, AilRepo));
                 }
                 else return new Either<PetDTO, DomainError>
                         (new PetErrorBadRequest("Could not create pet."));
@@ -87,7 +90,7 @@ namespace ClinicaVeterinaria.API.Api.services
                 var owner = await UserRepo.FindByEmail(updated.OwnerEmail);
                 if (owner != null)
                 {
-                    return new Either<PetDTO, string>(updated.ToDTO(owner));
+                    return new Either<PetDTO, string>(updated.ToDTO(owner, VacRepo, AilRepo));
                 }
                 else return new Either<PetDTO, string>
                         ($"User with email {updated.OwnerEmail} not found.");
@@ -112,7 +115,7 @@ namespace ClinicaVeterinaria.API.Api.services
                 return new Either<PetDTO, DomainError>
                     (new UserErrorNotFound($"User with email {pet.OwnerEmail} not found."));
             }
-            var successfullResult = pet.ToDTO(owner);
+            var successfullResult = pet.ToDTO(owner, VacRepo, AilRepo);
 
             // borramos todas las vacunas de la mascota
             var vaccines = await VacRepo.FindAll();

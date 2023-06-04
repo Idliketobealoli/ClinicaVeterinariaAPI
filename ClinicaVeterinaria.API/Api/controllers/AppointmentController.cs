@@ -92,7 +92,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
-        [HttpPatch("{id}"), Authorize(Roles = "ADMIN,VET")]
+        [HttpPut("{id}"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult UpdateAppointment(Guid id, [Required] string state)
         {
             var task = Service.UpdateState(id, state);

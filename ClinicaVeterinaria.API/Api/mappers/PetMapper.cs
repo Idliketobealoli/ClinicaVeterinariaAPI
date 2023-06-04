@@ -1,5 +1,6 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.model;
+using ClinicaVeterinaria.API.Api.repositories;
 
 namespace ClinicaVeterinaria.API.Api.mappers
 {
@@ -17,7 +18,7 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 );
         }
 
-        public static PetDTO ToDTO(this Pet pet, User owner)
+        public static PetDTO ToDTO(this Pet pet, User owner, VaccineRepository vRepo, AilmentTreatmentRepository aRepo)
         {
             return new
                 (
@@ -29,8 +30,9 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 pet.BirthDate.ToString(),
                 pet.Weight,
                 pet.Size,
-                pet.History.ToDTO(),
-                owner.ToDTOshort()
+                pet.History.ToDTO(vRepo, aRepo),
+                owner.ToDTOshort(),
+                pet.Active
                 );
         }
 
@@ -46,7 +48,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 dto.Size,
                 Sexes.FromString(dto.Sex),
                 DateOnly.Parse(dto.Date),
-                dto.OwnerEmail
+                dto.OwnerEmail,
+                true
                 );
         }
     }

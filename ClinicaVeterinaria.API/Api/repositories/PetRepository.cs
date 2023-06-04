@@ -20,7 +20,7 @@ namespace ClinicaVeterinaria.API.Api.repositories
         public virtual async Task<List<Pet>> FindAll()
         {
             var pets = await Context.Pets.ToListAsync();
-            return pets ?? new();
+            return pets.FindAll(p => p.Active == true) ?? new();
         }
 
         public virtual async Task<Pet?> FindById(Guid id)
@@ -57,7 +57,8 @@ namespace ClinicaVeterinaria.API.Api.repositories
             var found = Context.Pets.FirstOrDefault(u => u.Id == id);
             if (found != null)
             {
-                Context.Pets.Remove(found);
+                found.Active = !found.Active;
+                Context.Pets.Update(found);
                 await Context.SaveChangesAsync();
 
                 return found;

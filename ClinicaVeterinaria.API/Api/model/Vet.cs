@@ -14,7 +14,8 @@ namespace ClinicaVeterinaria.API.Api.model
             string sSNumber,
             string password,
             Role role,
-            string specialty
+            string specialty,
+            bool active
             )
         {
             Id = Guid.NewGuid();
@@ -25,6 +26,7 @@ namespace ClinicaVeterinaria.API.Api.model
             Password = password;
             Role = role;
             Specialty = specialty;
+            Active = active;
         }
 
         [Required, Key]
@@ -43,5 +45,7 @@ namespace ClinicaVeterinaria.API.Api.model
         public Role Role { get; set; }
         [Required]
         public string Specialty { get; set; }
+        [Required]
+        public bool Active { get; set; }
     }
 }

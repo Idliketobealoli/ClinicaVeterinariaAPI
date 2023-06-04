@@ -1,56 +1,76 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.model;
+using ClinicaVeterinaria.API.Api.repositories;
 
 namespace ClinicaVeterinaria.API.Api.mappers
 {
     internal static class HistoryMapper
     {
-        public static HistoryDTO ToDTO(this History history)
+        public static HistoryDTO ToDTO(this History history, VaccineRepository vRepo, AilmentTreatmentRepository aRepo)
         {
             HashSet<VaccineDTO> vaccines = new();
-            foreach (Vaccine v in history.Vaccines)
+            var vaccinesFromDB = vRepo.FindByPetId(history.PetId);
+            vaccinesFromDB.Wait();
+            if (vaccinesFromDB.Result != null)
             {
-                var newVaccine = v.ToDTO();
-                vaccines.Add(newVaccine);
+                foreach (Vaccine v in vaccinesFromDB.Result)
+                {
+                    var newVaccine = v.ToDTO();
+                    vaccines.Add(newVaccine);
+                }
             }
-            Dictionary<string, string> ailmentTreatment = new();
-            int i = 0;
-            foreach (string ailment in history.Ailments)
+
+            HashSet<AilmentTreatmentDTO> ats = new();
+            var atsFromDB = aRepo.FindByPetId(history.PetId);
+            atsFromDB.Wait();
+            if (atsFromDB.Result != null)
             {
-                ailmentTreatment[ailment] = history.Treatments[i];
-                i++;
+                foreach (AilmentTreatment at in atsFromDB.Result)
+                {
+                    var newAT = at.ToDTO();
+                    ats.Add(newAT);
+                }
             }
 
             return new
                 (
                 history.PetId,
                 vaccines,
-                ailmentTreatment
+                ats
                 );
         }
 
-        public static HistoryDTOvaccines ToDTOvaccines(this History history)
+        public static HistoryDTOvaccines ToDTOvaccines(this History history, VaccineRepository vRepo)
         {
             HashSet<VaccineDTO> vaccines = new();
-            foreach (Vaccine v in history.Vaccines)
+            var vaccinesFromDB = vRepo.FindByPetId(history.PetId);
+            vaccinesFromDB.Wait();
+            if (vaccinesFromDB.Result != null)
             {
-                var newVaccine = v.ToDTO();
-                vaccines.Add(newVaccine);
+                foreach (Vaccine v in vaccinesFromDB.Result)
+                {
+                    var newVaccine = v.ToDTO();
+                    vaccines.Add(newVaccine);
+                }
             }
 
             return new(vaccines);
         }
 
-        public static HistoryDTOailmentTreatment ToDTOailmentTreatment(this History history)
+        public static HistoryDTOailmentTreatment ToDTOailmentTreatment(this History history, AilmentTreatmentRepository aRepo)
         {
-            Dictionary<string, string> ailmentTreatment = new();
-            int i = 0;
-            foreach (string ailment in history.Ailments)
+            HashSet<AilmentTreatmentDTO> ats = new();
+            var atsFromDB = aRepo.FindByPetId(history.PetId);
+            atsFromDB.Wait();
+            if (atsFromDB.Result != null)
             {
-                ailmentTreatment[ailment] = history.Treatments[i];
-                i++;
+                foreach (AilmentTreatment at in atsFromDB.Result)
+                {
+                    var newAT = at.ToDTO();
+                    ats.Add(newAT);
+                }
             }
-            return new(ailmentTreatment);
+            return new(ats);
         }
     }
 }

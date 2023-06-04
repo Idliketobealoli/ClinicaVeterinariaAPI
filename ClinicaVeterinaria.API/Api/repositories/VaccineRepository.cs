@@ -22,6 +22,12 @@ namespace ClinicaVeterinaria.API.Api.repositories
             return vaccines ?? new();
         }
 
+        public virtual async Task<List<Vaccine>> FindByPetId(Guid petId)
+        {
+            var vaccines = await Context.Vaccines.ToListAsync();
+            return vaccines.FindAll(v => v.PetId == petId);
+        }
+
         public virtual async Task<Vaccine?> FindById(Guid id)
         {
             return await Context.Vaccines.FirstOrDefaultAsync(u => u.Id == id);

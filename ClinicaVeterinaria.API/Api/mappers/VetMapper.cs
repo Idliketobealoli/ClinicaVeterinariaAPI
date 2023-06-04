@@ -15,7 +15,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 vet.Email,
                 vet.SSNumber,
                 vet.Role,
-                vet.Specialty
+                vet.Specialty,
+                vet.Active
                 );
         }
 
@@ -34,7 +35,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 (
                 vet.Name,
                 vet.Surname,
-                vet.Email
+                vet.Email,
+                vet.Active
                 );
         }
 
@@ -48,7 +50,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 dto.SSNumber,
                 CipherService.Encode(dto.Password),
                 Roles.FromString(dto.Role),
-                dto.Specialty
+                dto.Specialty,
+                true
                 );
         }
 

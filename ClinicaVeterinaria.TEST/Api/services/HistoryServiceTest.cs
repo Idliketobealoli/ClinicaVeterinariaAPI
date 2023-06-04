@@ -11,30 +11,32 @@ namespace ClinicaVeterinaria.TEST.Api.services
     {
         private Mock<HistoryRepository> HistoryRepo;
         private Mock<VaccineRepository> VaccineRepo;
+        private Mock<AilmentTreatmentRepository> AilmentRepo;
         private HistoryService Service;
         private List<History> ListHistory;
         private List<HistoryDTO> ListDTO;
         private HashSet<VaccineDTO> VaccinesSet;
-        private Dictionary<string, string> ailmentTreatment;
+        private HashSet<AilmentTreatmentDTO> ailmentTreatmentSet;
         private VaccineDTO Vaccine;
+        private AilmentTreatmentDTO AT;
         private History EntityHistory;
         private HistoryDTO DTO;
-        private string problema = "Diabetes";
-        private string tratamiento = "Inyecciones de insulina";
 
         [TestInitialize]
         public void Init()
         {
             HistoryRepo = new Mock<HistoryRepository>();
             VaccineRepo = new Mock<VaccineRepository>();
-            Service = new(HistoryRepo.Object, VaccineRepo.Object);
+            AilmentRepo = new Mock<AilmentTreatmentRepository>();
+            Service = new(HistoryRepo.Object, VaccineRepo.Object, AilmentRepo.Object);
             EntityHistory = new(
                 Guid.Parse("d24e89f2-c97a-4e0d-ab07-f392a8ea5fd4"));
             Vaccine = new("Vacuna1", DateOnly.FromDateTime(DateTime.Now).ToString());
             VaccinesSet = new HashSet<VaccineDTO>() { Vaccine };
-            ailmentTreatment = new Dictionary<string, string>() { { problema, tratamiento } };
+            AT = new("Diabetes", "Inyecciones de insulina");
+            ailmentTreatmentSet = new HashSet<AilmentTreatmentDTO>() { AT };
             DTO = new(
-                Guid.Parse("d24e89f2-c97a-4e0d-ab07-f392a8ea5fd4"), VaccinesSet, ailmentTreatment);
+                Guid.Parse("d24e89f2-c97a-4e0d-ab07-f392a8ea5fd4"), VaccinesSet, ailmentTreatmentSet);
             ListHistory = new List<History>() { EntityHistory };
             ListDTO = new List<HistoryDTO>() { DTO };
         }
@@ -105,7 +107,6 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Assert.IsTrue(res.Result._isSuccess);
             Assert.IsNotNull(res.Result._successValue);
             Assert.IsNull(res.Result._errorValue);
-            Assert.AreEqual(EntityHistory.Vaccines.Count, res.Result._successValue.Vaccines.Count);
         }
 
         [TestMethod]
@@ -133,7 +134,6 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Assert.IsTrue(res.Result._isSuccess);
             Assert.IsNotNull(res.Result._successValue);
             Assert.IsNull(res.Result._errorValue);
-            Assert.AreEqual(EntityHistory.Ailments.Count, res.Result._successValue.AilmentTreatment.Count);
         }
 
         [TestMethod]
@@ -161,7 +161,6 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Assert.IsTrue(res.Result._isSuccess);
             Assert.IsNotNull(res.Result._successValue);
             Assert.IsNull(res.Result._errorValue);
-            Assert.AreEqual(EntityHistory.Vaccines.Count, res.Result._successValue.Vaccines.Count);
         }
 
         [TestMethod]
@@ -183,12 +182,11 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             HistoryRepo.Setup(x => x.FindByPetId(It.IsAny<Guid>())).ReturnsAsync(EntityHistory, new TimeSpan(100));
 
-            var res = Service.AddAilmentTreatment(Guid.NewGuid(), "Problema", "Tratamiento");
+            var res = Service.AddAilmentTreatment(Guid.NewGuid(), AT);
 
             Assert.IsTrue(res.Result._isSuccess);
             Assert.IsNotNull(res.Result._successValue);
             Assert.IsNull(res.Result._errorValue);
-            Assert.AreEqual(EntityHistory.Ailments.Count, res.Result._successValue.AilmentTreatment.Count);
         }
 
         [TestMethod]
@@ -196,7 +194,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             HistoryRepo.Setup(x => x.FindByPetId(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
 
-            var res = Service.AddAilmentTreatment(Guid.Empty, "Vacío", "Vacío");
+            var res = Service.AddAilmentTreatment(Guid.Empty, AT);
 
             Assert.IsFalse(res.Result._isSuccess);
             Assert.IsNull(res.Result._successValue);

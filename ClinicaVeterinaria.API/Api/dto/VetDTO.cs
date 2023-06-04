@@ -10,6 +10,7 @@ namespace ClinicaVeterinaria.API.Api.dto
         public string SSNumber { get; set; }
         public string Role { get; set; }
         public string Specialty { get; set; }
+        public bool IsActive { get; set; }
 
         public VetDTO
             (
@@ -18,7 +19,8 @@ namespace ClinicaVeterinaria.API.Api.dto
             string email,
             string sSNumber,
             Role role,
-            string specialty
+            string specialty,
+            bool isActive
             )
         {
             Name = name;
@@ -27,6 +29,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             SSNumber = sSNumber;
             Role = Roles.ToString(role);
             Specialty = specialty;
+            IsActive = isActive;
         }
     }
 
@@ -35,17 +38,20 @@ namespace ClinicaVeterinaria.API.Api.dto
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
+        public bool IsActive { get; set ; }
 
         public VetDTOappointment
             (
             string name,
             string surname,
-            string email
+            string email,
+            bool isActive
             )
         {
             Name = name;
             Surname = surname;
             Email = email;
+            IsActive = isActive;
         }
     }
 

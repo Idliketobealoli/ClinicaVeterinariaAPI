@@ -48,6 +48,7 @@ namespace ClinicaVeterinaria.API
             builder.Services.AddScoped<AppointmentRepository>();
             builder.Services.AddScoped<HistoryRepository>();
             builder.Services.AddScoped<VaccineRepository>();
+            builder.Services.AddScoped<AilmentTreatmentRepository>();
             builder.Services.AddScoped<PetRepository>();
 
             // DI de los servicios

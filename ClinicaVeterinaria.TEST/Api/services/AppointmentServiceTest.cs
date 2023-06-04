@@ -39,12 +39,12 @@ namespace ClinicaVeterinaria.TEST.Api.services
             DTOcreate = new("prueba@prueba.com", EntityAppointment.InitialDate.ToString(), EntityAppointment.FinishDate.ToString(),
                 "7e2809eb-a756-4515-9646-aca4d58f6a01", "Dato", "PENDING", "vet@vet.com");
             UserDto = new("Sebastian", "Mendoza");
-            UserTest = new("Sebastian", "Mendoza", "sebs@mendoza.com", "000000000", "prueba");
+            UserTest = new("Sebastian", "Mendoza", "sebs@mendoza.com", "000000000", "prueba", true);
             PetDtO = new(Guid.Parse("84ee5eff-afee-4c61-b835-3574af2d5c60"), "Danko", "Labrador", "Perro", "MALE");
             PetTest = new(Guid.Parse("e214c069-4b3e-4b8b-9179-bb6428ed3e52"), "Danko", "Labrador", "Perro", 50, 10.3,
-                Sex.MALE, DateOnly.Parse("2004-10-15"), "sebs@mendoza.com");
-            VetDtO = new("Daniel", "Rodriguez", "daro@mail.com");
-            VetTest = new("Daniel", "Rodriguez", "daro@mail.com", "000000000", "prueba", Role.VET, "Animales exótico");
+                Sex.MALE, DateOnly.Parse("2004-10-15"), "sebs@mendoza.com", true);
+            VetDtO = new("Daniel", "Rodriguez", "daro@mail.com", true);
+            VetTest = new("Daniel", "Rodriguez", "daro@mail.com", "000000000", "prueba", Role.VET, "Animales exótico", true);
             DTO = new(Guid.NewGuid(), UserDto, DateTime.Now.ToString(), DateTime.Now.ToString(), PetDtO, "Dato", States.ToString(State.PENDING), VetDtO);
             ListAppointments = new List<Appointment>() { EntityAppointment };
             ListDTO = new List<AppointmentDTO>() { DTO };

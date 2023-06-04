@@ -19,7 +19,7 @@ namespace ClinicaVeterinaria.API.Api.repositories
         public virtual async Task<List<User>> FindAll()
         {
             var users = await Context.Users.ToListAsync();
-            return users ?? new();
+            return users.FindAll(u => u.Active == true) ?? new();
         }
 
         public virtual async Task<User?> FindById(Guid id)
@@ -59,12 +59,13 @@ namespace ClinicaVeterinaria.API.Api.repositories
             return null;
         }
 
-        public virtual async Task<User?> Delete(string email)
+        public virtual async Task<User?> SwitchActivity(string email)
         {
             var foundUser = Context.Users.FirstOrDefault(u => u.Email == email);
             if (foundUser != null)
             {
-                Context.Users.Remove(foundUser);
+                foundUser.Active = !foundUser.Active;
+                Context.Users.Update(foundUser);
                 await Context.SaveChangesAsync();
 
                 return foundUser;

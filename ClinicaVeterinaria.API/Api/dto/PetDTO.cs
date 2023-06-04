@@ -29,7 +29,8 @@ namespace ClinicaVeterinaria.API.Api.dto
             Guid id, string name,
             string race, string species, string sex,
             string birthDate, double weight, double size,
-            HistoryDTO history,UserDTOshort ownerDTO
+            HistoryDTO history,UserDTOshort ownerDTO,
+            bool isActive
             )
         {
             Id = id;
@@ -42,6 +43,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             Size = size;
             History = history;
             OwnerDTO = ownerDTO;
+            IsActive = isActive;
         }
 
         public Guid Id { get; set; }
@@ -54,6 +56,7 @@ namespace ClinicaVeterinaria.API.Api.dto
         public double Size { get; set; }
         public HistoryDTO History { get; set; }
         public UserDTOshort OwnerDTO { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class PetDTOcreate

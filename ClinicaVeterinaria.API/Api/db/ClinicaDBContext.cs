@@ -14,6 +14,7 @@ namespace ClinicaVeterinaria.API.Api.db
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<History> Histories { get; set; }
         public DbSet<Vaccine> Vaccines { get; set; }
+        public DbSet<AilmentTreatment> ATs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,11 +22,6 @@ namespace ClinicaVeterinaria.API.Api.db
                 .HasOne(p => p.History)
                 .WithOne()
                 .HasForeignKey<History>(h => h.PetId);
-
-            modelBuilder.Entity<History>()
-                .HasMany(h => h.Vaccines)
-                .WithOne()
-                .HasForeignKey(v => v.PetId);
         }
     }
 }

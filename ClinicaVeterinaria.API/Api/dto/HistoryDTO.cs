@@ -6,7 +6,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             (
             Guid petId,
             HashSet<VaccineDTO> vaccines,
-            Dictionary<string, string> ailmentTreatment
+            HashSet<AilmentTreatmentDTO> ailmentTreatment
             )
         {
             PetId = petId;
@@ -16,7 +16,7 @@ namespace ClinicaVeterinaria.API.Api.dto
 
         public Guid PetId { get; set; }
         public HashSet<VaccineDTO> Vaccines { get; set; }
-        public Dictionary<string, string> AilmentTreatment { get; set; }
+        public HashSet<AilmentTreatmentDTO> AilmentTreatment { get; set; }
     }
 
     public class HistoryDTOvaccines
@@ -31,11 +31,11 @@ namespace ClinicaVeterinaria.API.Api.dto
 
     public class HistoryDTOailmentTreatment
     {
-        public HistoryDTOailmentTreatment(Dictionary<string, string> ailmentTreatment)
+        public HistoryDTOailmentTreatment(HashSet<AilmentTreatmentDTO> ailmentTreatment)
         {
             AilmentTreatment = ailmentTreatment;
         }
 
-        public Dictionary<string, string> AilmentTreatment { get; set; }
+        public HashSet<AilmentTreatmentDTO> AilmentTreatment { get; set; }
     }
 }

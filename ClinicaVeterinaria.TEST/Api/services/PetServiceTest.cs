@@ -14,6 +14,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         private Mock<UserRepository> URepo;
         private Mock<HistoryRepository> HRepo;
         private Mock<VaccineRepository> VRepo;
+        private Mock<AilmentTreatmentRepository> ARepo;
         private PetService Service;
         private List<Pet> List;
         private List<PetDTO> ListDTO;
@@ -34,17 +35,18 @@ namespace ClinicaVeterinaria.TEST.Api.services
             URepo = new Mock<UserRepository>();
             HRepo = new Mock<HistoryRepository>();
             VRepo = new Mock<VaccineRepository>();
-            Service = new(Repo.Object, URepo.Object, HRepo.Object, VRepo.Object);
+            ARepo = new Mock<AilmentTreatmentRepository>();
+            Service = new(Repo.Object, URepo.Object, HRepo.Object, VRepo.Object, ARepo.Object);
             Entity = new(
                 Guid.NewGuid(), "test", "testeado", "cat",
-                10.0, 15.0, Sex.FEMALE, DateOnly.FromDateTime(DateTime.Now), "uwu@gmail.com");
+                10.0, 15.0, Sex.FEMALE, DateOnly.FromDateTime(DateTime.Now), "uwu@gmail.com", true);
             History = new(Entity.Id);
             HistoryDTO = new(Entity.Id, new(), new());
-            User = new("owner", "test", "uwu@gmail.com", "y", "z");
+            User = new("owner", "test", "uwu@gmail.com", "y", "z", true);
             UserDTO = new("owner", "test");
             DTO = new(
                 Entity.Id, "test", "testeado", "cat",
-                "FEMALE", DateOnly.FromDateTime(DateTime.Now).ToString(), 10.0, 15.0, HistoryDTO, UserDTO);
+                "FEMALE", DateOnly.FromDateTime(DateTime.Now).ToString(), 10.0, 15.0, HistoryDTO, UserDTO, true);
             DTOcreate = new(
                 "test", "testeado", "cat",
                 10.0, 15.0, "FEMALE", DateOnly.FromDateTime(DateTime.Now).ToString(), "uwu@gmail.com");

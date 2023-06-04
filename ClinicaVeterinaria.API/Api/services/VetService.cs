@@ -121,7 +121,7 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public virtual async Task<Either<VetDTO, string>> Delete(string email)
         {
-            var user = await Repo.Delete(email);
+            var user = await Repo.SwitchActivity(email);
 
             if (user != null) return new Either<VetDTO, string>
                     (user.ToDTO());

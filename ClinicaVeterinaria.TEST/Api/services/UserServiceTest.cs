@@ -31,12 +31,12 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Service = new(Repo.Object);
             Entity = new(
                 "test", "testeado", "uwu@gmail.com",
-                "123456789", "uwu1234");
+                "123456789", "uwu1234", true);
             EntityLogin = new(
                 "test", "testeado", "uwu@gmail.com",
-                "123456789", CipherService.Encode("uwu1234"));
+                "123456789", CipherService.Encode("uwu1234"), true);
             DTO = new(
-                "test", "testeado", "uwu@gmail.com", "123456789");
+                "test", "testeado", "uwu@gmail.com", "123456789", true);
             DTOShort = new("test", "testeado");
             DTOandToken = new(DTO, "");
             List = new List<User>() { Entity };
@@ -220,7 +220,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         [TestMethod]
         public void DeleteOk()
         {
-            Repo.Setup(x => x.Delete(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
+            Repo.Setup(x => x.SwitchActivity(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
 
             var res = Service.Delete("uwu@gmail.com");
             res.Wait();
@@ -234,7 +234,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         [TestMethod]
         public void DeleteError()
         {
-            Repo.Setup(x => x.Delete(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
+            Repo.Setup(x => x.SwitchActivity(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
 
             var res = Service.Delete("uwu@gmail.com");
             res.Wait();

@@ -6,19 +6,22 @@
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public bool IsActive { get; set; }
 
         public UserDTO
             (
             string name,
             string surname,
             string email,
-            string phone
+            string phone,
+            bool isActive
             )
         {
             Name = name;
             Surname = surname;
             Email = email;
             Phone = phone;
+            IsActive = isActive;
         }
     }
 

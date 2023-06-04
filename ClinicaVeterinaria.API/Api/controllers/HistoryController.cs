@@ -130,10 +130,14 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// </returns>
         /// <response code="200" />
         /// <response code="404" />
-        [HttpPost("ailment/{id}"), Authorize(Roles = "ADMIN,VET")]
-        public ActionResult AddAilmentTreatment(Guid id, [FromHeader] string ailment, [FromBody] string treatment)
+        [HttpPut("ailment/{id}"), Authorize(Roles = "ADMIN,VET")]
+        public ActionResult AddAilmentTreatment(Guid id, [FromBody] AilmentTreatmentDTO ailmentTreatment)
         {
-            var task = Service.AddAilmentTreatment(id, ailment, treatment);
+            var err = ailmentTreatment.Validate();
+            if (err != null)
+                return BadRequest(err);
+
+            var task = Service.AddAilmentTreatment(id, ailmentTreatment);
             task.Wait();
 
             return task.Result.Match<ActionResult>
