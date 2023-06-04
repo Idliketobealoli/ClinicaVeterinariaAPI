@@ -67,10 +67,18 @@ namespace ClinicaVeterinaria.API.Api.services
             if (history != null)
             {
                 var newVaccine = vaccine.FromDTO(id);
-                history.Vaccines.Add(newVaccine);
-                await VacRepo.Create(newVaccine);
-                await HisRepo.Update(history.Id, history);
-                return new Either<HistoryDTO, string>(history.ToDTO());
+                var success = history.Vaccines.Add(newVaccine);
+                if (success)
+                {
+                    await VacRepo.Create(newVaccine);
+                    await HisRepo.Update(history.Id, history);
+                    return new Either<HistoryDTO, string>(history.ToDTO());
+                }
+                else
+                {
+                    return new Either<HistoryDTO, string>
+                    ($"Could not add vaccine.");
+                }
             }
             else return new Either<HistoryDTO, string>
                     ($"History with PetId {id} not found.");

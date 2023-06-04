@@ -33,7 +33,15 @@ namespace ClinicaVeterinaria.API.Api.services
 
             if (userEmail != null) { entities = entities.FindAll(e => e.UserEmail == userEmail) ?? new(); }
             if (vetEmail != null) { entities = entities.FindAll(e => e.VetEmail == vetEmail) ?? new(); }
-            if (date != null) { entities = entities.FindAll(e => e.InitialDate.Day == date.Value.Day) ?? new(); }
+            if (date != null)
+            {
+                entities = entities.FindAll
+                    (e =>
+                    e.InitialDate.Day == date.Value.Day &&
+                    e.InitialDate.Month == date.Value.Month &&
+                    e.InitialDate.Year == date.Value.Year
+                    ) ?? new();
+            }
 
             var entitiesDTOs = new List<AppointmentDTOshort>();
             foreach (var entity in entities)

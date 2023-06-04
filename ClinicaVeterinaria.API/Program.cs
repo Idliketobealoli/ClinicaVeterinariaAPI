@@ -1,6 +1,5 @@
 using ClinicaVeterinaria.API.Api.controllers;
 using ClinicaVeterinaria.API.Api.db;
-using ClinicaVeterinaria.API.Api.model;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,6 +30,13 @@ namespace ClinicaVeterinaria.API
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy => { policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); }
+                    );
             });
 
             builder.Services.AddDbContext<ClinicaDBContext>(options =>
@@ -83,6 +89,10 @@ namespace ClinicaVeterinaria.API
             }
 
             app.UseHttpsRedirection();
+
+            //app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 
