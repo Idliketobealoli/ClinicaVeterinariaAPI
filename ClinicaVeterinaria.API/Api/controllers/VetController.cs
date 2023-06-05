@@ -3,6 +3,7 @@ using ClinicaVeterinaria.API.Api.services;
 using ClinicaVeterinaria.API.Api.validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ClinicaVeterinaria.API.Api.controllers
 {
@@ -185,6 +186,28 @@ namespace ClinicaVeterinaria.API.Api.controllers
         public ActionResult DeleteVet(string email)
         {
             var task = Service.Delete(email);
+            task.Wait();
+
+            return task.Result.Match<ActionResult>
+                (
+                onSuccess: x => Ok(x),
+                onError: x => NotFound(x)
+                );
+        }
+
+        /// <summary>
+        /// Finds the vet whose email corresponds with the one in the token.
+        /// </summary>
+        /// <returns>
+        /// The vet, or a not found error.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="404" />
+        [HttpGet("/me"), Authorize(Roles = "ADMIN,VET")]
+        public ActionResult MeVet()
+        {
+            var vetEmail = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            var task = Service.FindByEmail(vetEmail);
             task.Wait();
 
             return task.Result.Match<ActionResult>

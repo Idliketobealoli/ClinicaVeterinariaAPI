@@ -129,6 +129,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// The history, or a not found error.
         /// </returns>
         /// <response code="200" />
+        /// <response code="400" />
         /// <response code="404" />
         [HttpPut("ailment/{id}"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult AddAilmentTreatment(Guid id, [FromBody] AilmentTreatmentDTO ailmentTreatment)

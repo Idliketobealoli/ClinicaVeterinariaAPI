@@ -92,6 +92,15 @@ namespace ClinicaVeterinaria.API.Api.controllers
                 );
         }
 
+        /// <summary>
+        /// Updates an appointment's state, if an appointment with that ID exists.
+        /// </summary>
+        /// <returns>
+        /// The appointment, or an error response.
+        /// </returns>
+        /// <response code="200" />
+        /// <response code="400" />
+        /// <response code="404" />
         [HttpPut("{id}"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult UpdateAppointment(Guid id, [Required] string state)
         {
