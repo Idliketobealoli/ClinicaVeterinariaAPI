@@ -72,4 +72,4 @@ La ruta base de la API será:
 | GET | /{id} | ADMIN, VET, USER | Encuentra una cita por su ID | 200, 404 | DTO de la cita |
 | POST | / | ADMIN, VET, USER | Crea una cita | 200, 400, 404 | DTO de la cita |
 | PUT | / | ADMIN, VET | Actualiza el estado una cita | 200, 400, 404 | DTO de la cita |
-| DELETE | /{id} | ADMIN, VET, USER | Cancela una cita, siempre y cuando sea con mas de 48 horas de antelación | 200, 400, 404 | DTO de la cita |
+| DELETE | /{id} | ADMIN, VET, USER | Cancela una cita, siempre y cuando sea con mas de 24 horas de antelación | 200, 400, 404 | DTO de la cita |
