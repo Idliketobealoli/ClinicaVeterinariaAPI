@@ -203,7 +203,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// </returns>
         /// <response code="200" />
         /// <response code="404" />
-        [HttpGet("/me"), Authorize(Roles = "ADMIN,VET")]
+        [HttpGet("me"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult MeVet()
         {
             var vetEmail = HttpContext.User.FindFirstValue(ClaimTypes.Email);
