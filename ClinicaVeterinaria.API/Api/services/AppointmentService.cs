@@ -164,10 +164,10 @@ namespace ClinicaVeterinaria.API.Api.services
                     (new AppointmentErrorNotFound($"Appointment with id {id} not found."));
             }
 
-            if (appointment.InitialDate > DateTime.UtcNow.AddDays(-2))
+            if (appointment.InitialDate < DateTime.UtcNow.AddDays(1))
             {
                 return new Either<AppointmentDTO, DomainError>
-                    (new AppointmentErrorBadRequest($"Can not delete an appointment 2 days prior to its appointed date."));
+                    (new AppointmentErrorBadRequest($"Can not delete an appointment 1 day prior to its appointed date."));
             }
 
             var usr = await UserRepo.FindByEmail(appointment.UserEmail);
