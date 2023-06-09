@@ -65,6 +65,12 @@ namespace ClinicaVeterinaria.API
             builder.Services.AddScoped<HistoryController>();
             builder.Services.AddScoped<PetController>();
 
+            var sqlOptionsBuilder = new DbContextOptionsBuilder<ClinicaDBContext>()
+                .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            var vetsRepo = new VetRepository(new ClinicaDBContext(sqlOptionsBuilder.Options));
+
+            InitialData.SetData(vetsRepo);
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;

@@ -34,7 +34,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             UserRepo = new Mock<UserRepository>();
             VetRepo = new Mock<VetRepository>();
             Service = new AppointmentService(AppointmentRepo.Object, PetRepo.Object, UserRepo.Object, VetRepo.Object);
-            EntityAppointment = new Appointment("prueba@prueba.com", DateTime.Now, DateTime.Now.AddHours(1),
+            EntityAppointment = new Appointment("prueba@prueba.com", DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddHours(1),
                 Guid.Parse("7e2809eb-a756-4515-9646-aca4d58f6a01"), "Dato", "vet@vet.com");
             DTOcreate = new("prueba@prueba.com", EntityAppointment.InitialDate.ToString(), EntityAppointment.FinishDate.ToString(),
                 "7e2809eb-a756-4515-9646-aca4d58f6a01", "Dato", "PENDING", "vet@vet.com");
@@ -45,7 +45,8 @@ namespace ClinicaVeterinaria.TEST.Api.services
                 Sex.MALE, DateOnly.Parse("2004-10-15"), "sebs@mendoza.com", true);
             VetDtO = new("Daniel", "Rodriguez", "daro@mail.com", true);
             VetTest = new("Daniel", "Rodriguez", "daro@mail.com", "000000000", "prueba", Role.VET, "Animales exótico", true);
-            DTO = new(Guid.NewGuid(), UserDto, DateTime.Now.ToString(), DateTime.Now.ToString(), PetDtO, "Dato", States.ToString(State.PENDING), VetDtO);
+            DTO = new(Guid.NewGuid(), UserDto, DateTime.Now.AddDays(2).ToString(), DateTime.Now.AddDays(2).AddHours(1).ToString(),
+                PetDtO, "Dato", States.ToString(State.PENDING), VetDtO);
             ListAppointments = new List<Appointment>() { EntityAppointment };
             ListDTO = new List<AppointmentDTO>() { DTO };
         }

@@ -110,7 +110,7 @@ namespace ClinicaVeterinaria.API.Api.services
             {
                 newList =
                     from ap in allAppointments
-                    where (ap.InitialDate == appointment.InitialDate)
+                    where (appointment.InitialDate >= ap.InitialDate && appointment.InitialDate < ap.FinishDate)
                     select ap;
             }
 
