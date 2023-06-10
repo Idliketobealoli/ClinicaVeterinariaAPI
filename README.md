@@ -27,12 +27,14 @@ La ruta base de la API será:
 
 | Método | Endpoint | Auth | Descripción | Status Code | Return Content |
 |--------|----------|------|-------------|-------------|----------------|
-| GET | / | ADMIN | Encuentra todos los veterinarios de la base de datos | 200 | Lista de DTO de veterinarios |
+| GET | / | ADMIN | Encuentra todos los veterinarios activos de la base de datos | 200 | Lista de DTO de veterinarios |
+| GET | /appointment | USER | Encuentra todos los veterinarios activos de la base de datos, mostrando solo su nombre, email, apellido y estado | 200 | Lista de DTOappointment de veterinarios |
+| GET | /stats | ADMIN, VET | Encuentra todos los veterinarios activos de la base de datos, ordenados por la cantidad de citas asociadas a cada uno | 200 | Lista de DTOstats de veterinarios |
 | GET | /me | ADMIN, VET | Devuelve la informacion del propio veterinario | 200, 404 | DTO del veterinario |
 | GET | /{email} | ADMIN, VET, USER | Encuentra un veterinario por su email | 200, 404 | DTO del veterinario |
 | GET | /short/{email} | ADMIN, VET, USER | Encuentra un veterinario por su email | 200, 404 | DTO del veterinario, con informacion reducida |
 | GET | /appointment/{email} | ADMIN, VET, USER | Encuentra un veterinario por su email | 200, 404 | DTO del veterinario, con informacion preparada para una cita |
-| POST | /register | NO | Registra al veterinario en la base de datos | 200, 400 | DTO del veterinario con su token |
+| POST | /register | ADMIN, VET | Registra a un nuevo veterinario en la base de datos | 200, 400 | DTO del veterinario con su token |
 | POST | /login | NO | Permite logarse al veterinario | 200, 400 | DTO del veterinario con su token |
 | PUT | / | ADMIN, VET | Permite al veterinario cambiar su contraseña | 200, 400, 404 | DTO del veterinario |
 | DELETE | /{email} | ADMIN | Da de baja a un veterinario | 200, 404 | DTO del veterinario |
