@@ -29,6 +29,17 @@ namespace ClinicaVeterinaria.API.Api.mappers
                 );
         }
 
+        public static VetDTOstats ToDTOstats(this Vet vet, int amount)
+        {
+            return new
+                (
+                vet.Name,
+                vet.Surname,
+                vet.Email,
+                amount
+                );
+        }
+
         public static VetDTOappointment ToDTOappointment(this Vet vet)
         {
             return new

@@ -12,6 +12,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
     public class VetServiceTest
     {
         private Mock<VetRepository> Repo;
+        private Mock<AppointmentRepository> ARepo;
         private VetService Service;
         private List<Vet> List;
         private List<VetDTO> ListDTO;
@@ -29,7 +30,8 @@ namespace ClinicaVeterinaria.TEST.Api.services
         public void Init()
         {
             Repo = new Mock<VetRepository>();
-            Service = new(Repo.Object);
+            ARepo = new Mock<AppointmentRepository>();
+            Service = new(Repo.Object, ARepo.Object);
             Entity = new(
                 "test", "testeado", "uwu@gmail.com",
                 "123456789", "uwu1234", Role.VET, "qwerty", true);

@@ -120,6 +120,28 @@ namespace ClinicaVeterinaria.API.Api.dto
         }
     }
 
+    public class VetDTOstats
+    {
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Email { get; set; }
+        public int AppointmentAmount { get; set; }
+
+        public VetDTOstats
+            (
+            string name,
+            string surname,
+            string email,
+            int appointmentAmount
+            )
+        {
+            Name = name;
+            Surname = surname;
+            Email = email;
+            AppointmentAmount = appointmentAmount;
+        }
+    }
+
     public class VetDTOandToken
     {
         public VetDTO DTO { get; set; }

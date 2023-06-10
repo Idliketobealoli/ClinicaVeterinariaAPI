@@ -21,7 +21,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         }
 
         /// <summary>
-        /// Finds all vets in the database.
+        /// Finds all active vets in the database.
         /// </summary>
         /// <returns>
         /// A list containing all vets in the database.
@@ -31,6 +31,42 @@ namespace ClinicaVeterinaria.API.Api.controllers
         public ActionResult FindAllVets()
         {
             var task = Service.FindAll();
+            task.Wait();
+
+            return Ok(task.Result);
+        }
+
+        /// <summary>
+        /// Finds all active vets in the database,
+        /// used for selecting a vet for an appointment.
+        /// </summary>
+        /// <returns>
+        /// A list containing all vets in the database,
+        /// but showing only their name, surname, email and status.
+        /// </returns>
+        /// <response code="200" />
+        [HttpGet("appointment"), Authorize(Roles = "USER")]
+        public ActionResult FindAllVetsAppointment()
+        {
+            var task = Service.FindAllAppointment();
+            task.Wait();
+
+            return Ok(task.Result);
+        }
+
+        /// <summary>
+        /// Finds all active vets in the database,
+        /// ordered by the amount of appointments linked to them.
+        /// </summary>
+        /// <returns>
+        /// A list containing all vets in the database,
+        /// ordered by the amount of appointments linked to them.
+        /// </returns>
+        /// <response code="200" />
+        [HttpGet("stats"), Authorize(Roles = "ADMIN,VET")]
+        public ActionResult FindAllVetsStats()
+        {
+            var task = Service.FindAllForStats();
             task.Wait();
 
             return Ok(task.Result);

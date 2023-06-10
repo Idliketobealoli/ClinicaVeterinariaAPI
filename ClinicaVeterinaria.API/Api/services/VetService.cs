@@ -10,10 +10,12 @@ namespace ClinicaVeterinaria.API.Api.services
     public class VetService
     {
         private readonly VetRepository Repo;
+        private readonly AppointmentRepository ARepo;
 
-        public VetService(VetRepository repo)
+        public VetService(VetRepository repo, AppointmentRepository aRepo)
         {
             Repo = repo;
+            ARepo = aRepo;
         }
         public VetService() { }
 
@@ -26,6 +28,30 @@ namespace ClinicaVeterinaria.API.Api.services
                 entitiesDTOs.Add(entity.ToDTO());
             }
             return entitiesDTOs;
+        }
+
+        public virtual async Task<List<VetDTOappointment>> FindAllAppointment()
+        {
+            var entities = await Repo.FindAll();
+            var entitiesDTOs = new List<VetDTOappointment>();
+            foreach (var entity in entities)
+            {
+                entitiesDTOs.Add(entity.ToDTOappointment());
+            }
+            return entitiesDTOs;
+        }
+
+        public virtual async Task<List<VetDTOstats>> FindAllForStats()
+        {
+            var appointments = await ARepo.FindAll();
+            var entities = await Repo.FindAll();
+            var entitiesDTOs = new List<VetDTOstats>();
+            foreach (var entity in entities)
+            {
+                var appointmentCount = appointments.Where(a => a.VetEmail == entity.Email).Count();
+                entitiesDTOs.Add(entity.ToDTOstats(appointmentCount));
+            }
+            return entitiesDTOs.OrderByDescending(e => e.AppointmentAmount).ToList();
         }
 
         public virtual async Task<Either<VetDTO, string>> FindByEmail(string email)
