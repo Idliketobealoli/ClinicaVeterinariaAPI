@@ -144,8 +144,7 @@ namespace ClinicaVeterinaria.API.Api.controllers
         /// <response code="200" />
         /// <response code="400" />
         /// <response code="404" />
-        // , Authorize(Roles = "ADMIN,VET")
-        [HttpPost("register")]
+        [HttpPost("register"), Authorize(Roles = "ADMIN,VET")]
         public ActionResult RegisterVet([FromBody] VetDTOregister dto)
         {
             var err = dto.Validate();
