@@ -260,7 +260,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             Repo.Setup(x => x.SwitchActivity(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
 
-            var res = Service.Delete("uwu@gmail.com");
+            var res = Service.Delete("uwu@gmail.com", false);
             res.Wait();
 
             Assert.IsTrue(res.Result._isSuccess);
@@ -274,7 +274,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             Repo.Setup(x => x.SwitchActivity(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
 
-            var res = Service.Delete("uwu@gmail.com");
+            var res = Service.Delete("uwu@gmail.com", false);
             res.Wait();
 
             Assert.IsFalse(res.Result._isSuccess);
