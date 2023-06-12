@@ -59,12 +59,12 @@ namespace ClinicaVeterinaria.API.Api.repositories
             return null;
         }
 
-        public virtual async Task<User?> SwitchActivity(string email)
+        public virtual async Task<User?> SwitchActivity(string email, bool active)
         {
             var foundUser = Context.Users.FirstOrDefault(u => u.Email == email);
             if (foundUser != null)
             {
-                foundUser.Active = !foundUser.Active;
+                foundUser.Active = active;
                 Context.Users.Update(foundUser);
                 await Context.SaveChangesAsync();
 
