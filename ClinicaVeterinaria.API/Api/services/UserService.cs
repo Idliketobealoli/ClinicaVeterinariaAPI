@@ -14,7 +14,7 @@ namespace ClinicaVeterinaria.API.Api.services
         public UserService(UserRepository repo, PetRepository pRepo)
         {
             Repo = repo;
-            PRepo = pRepo
+            PRepo = pRepo;
         }
 
         public UserService() { }
@@ -103,7 +103,7 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public virtual async Task<Either<UserDTO, string>> Delete(string email)
         {
-            var user = await Repo.SwitchActivity(email);
+            var user = await Repo.SwitchActivity(email, false);
             if (user != null)
             {
                 var allPets = await PRepo.FindAll();
