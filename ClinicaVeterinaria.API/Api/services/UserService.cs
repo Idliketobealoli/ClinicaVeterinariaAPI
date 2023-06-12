@@ -9,10 +9,12 @@ namespace ClinicaVeterinaria.API.Api.services
     public class UserService
     {
         private readonly UserRepository Repo;
+        private readonly PetRepository PRepo;
 
-        public UserService(UserRepository repo)
+        public UserService(UserRepository repo, PetRepository pRepo)
         {
             Repo = repo;
+            PRepo = pRepo
         }
 
         public UserService() { }
@@ -104,6 +106,14 @@ namespace ClinicaVeterinaria.API.Api.services
             var user = await Repo.SwitchActivity(email);
             if (user != null)
             {
+                var allPets = await PRepo.FindAll();
+                var pets = from pet in allPets
+                    where (pet.OwnerEmail == email)
+                    select pet;
+                foreach(var pet in pets)
+                {
+                    await PRepo.Delete(pet.Id, false);
+                }
                 return new Either<UserDTO, string>(user.ToDTO());
             }
             else return new Either<UserDTO, string>
