@@ -52,12 +52,12 @@ namespace ClinicaVeterinaria.API.Api.repositories
             return null;
         }
 
-        public virtual async Task<Pet?> Delete(Guid id)
+        public virtual async Task<Pet?> Delete(Guid id, bool active)
         {
             var found = Context.Pets.FirstOrDefault(u => u.Id == id);
             if (found != null)
             {
-                found.Active = !found.Active;
+                found.Active = active;
                 Context.Pets.Update(found);
                 await Context.SaveChangesAsync();
 
