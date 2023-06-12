@@ -116,7 +116,8 @@ namespace ClinicaVeterinaria.API.Api.services
                     (new UserErrorNotFound($"User with email {pet.OwnerEmail} not found."));
             }
             var successfullResult = pet.ToDTO(owner, VacRepo, AilRepo);
-
+            
+            /*
             // borramos todas las vacunas de la mascota
             var vaccines = await VacRepo.FindAll();
             var filteredVaccines =
@@ -134,9 +135,10 @@ namespace ClinicaVeterinaria.API.Api.services
             {
                 await HisRepo.Delete(history.Id);
             }
+            */
 
             // por ultimo, borramos la mascota y devolvemos el successful result
-            var deleted = await PetRepo.Delete(id);
+            var deleted = await PetRepo.Delete(id, false);
             if (deleted != null)
             {
                 return new Either<PetDTO, DomainError>(successfullResult);
