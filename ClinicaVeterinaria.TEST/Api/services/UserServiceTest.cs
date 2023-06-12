@@ -30,7 +30,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             Repo = new Mock<UserRepository>();
             PRepo = new Mock<PetRepository>();
-            Service = new(Repo.Object);
+            Service = new(Repo.Object, PRepo.Object);
             Entity = new(
                 "test", "testeado", "uwu@gmail.com",
                 "123456789", "uwu1234", true);
