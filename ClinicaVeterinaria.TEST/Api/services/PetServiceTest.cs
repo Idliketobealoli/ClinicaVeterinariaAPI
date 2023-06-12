@@ -212,7 +212,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             HRepo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(History, new TimeSpan(100));
             Repo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(Entity, new TimeSpan(100));
 
-            var res = Service.Delete(Entity.Id, false);
+            var res = Service.Delete(Entity.Id);
             res.Wait();
 
             Assert.IsTrue(res.Result._isSuccess);
@@ -226,7 +226,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         {
             Repo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
 
-            var res = Service.Delete(Entity.Id, false);
+            var res = Service.Delete(Entity.Id);
             res.Wait();
 
             Assert.IsFalse(res.Result._isSuccess);
@@ -243,7 +243,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             Repo.Setup(x => x.FindById(It.IsAny<Guid>())).ReturnsAsync(Entity, new TimeSpan(100));
             URepo.Setup(x => x.FindByEmail(It.IsAny<string>())).ReturnsAsync(null, new TimeSpan(100));
 
-            var res = Service.Delete(Entity.Id, false);
+            var res = Service.Delete(Entity.Id);
             res.Wait();
 
             Assert.IsFalse(res.Result._isSuccess);
@@ -265,7 +265,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             HRepo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(History, new TimeSpan(100));
             Repo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
 
-            var res = Service.Delete(Entity.Id, false);
+            var res = Service.Delete(Entity.Id);
             res.Wait();
 
             Assert.IsFalse(res.Result._isSuccess);
