@@ -12,6 +12,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
     public class UserServiceTest
     {
         private Mock<UserRepository> Repo;
+        private Mock<PetRepository> PRepo;
         private UserService Service;
         private List<User> List;
         private List<UserDTO> ListDTO;
@@ -28,6 +29,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         public void Init()
         {
             Repo = new Mock<UserRepository>();
+            PRepo = new Mock<PetRepository>();
             Service = new(Repo.Object);
             Entity = new(
                 "test", "testeado", "uwu@gmail.com",
@@ -221,6 +223,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
         public void DeleteOk()
         {
             Repo.Setup(x => x.SwitchActivity(It.IsAny<string>())).ReturnsAsync(Entity, new TimeSpan(100));
+            //PRepo.Setup(x => x.Delete(It.IsAny<Guid>(), false)).ReturnsAsync(null, new TimeSpan(100));
 
             var res = Service.Delete("uwu@gmail.com");
             res.Wait();
