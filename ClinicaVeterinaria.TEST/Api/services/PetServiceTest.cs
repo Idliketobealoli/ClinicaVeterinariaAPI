@@ -210,7 +210,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             VRepo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(Vaccine, new TimeSpan(100));
             HRepo.Setup(x => x.FindByPetId(It.IsAny<Guid>())).ReturnsAsync(History, new TimeSpan(100));
             HRepo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(History, new TimeSpan(100));
-            Repo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(Entity, new TimeSpan(100));
+            Repo.Setup(x => x.Delete(It.IsAny<Guid>(), false)).ReturnsAsync(Entity, new TimeSpan(100));
 
             var res = Service.Delete(Entity.Id);
             res.Wait();
@@ -263,7 +263,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             VRepo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(Vaccine, new TimeSpan(100));
             HRepo.Setup(x => x.FindByPetId(It.IsAny<Guid>())).ReturnsAsync(History, new TimeSpan(100));
             HRepo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(History, new TimeSpan(100));
-            Repo.Setup(x => x.Delete(It.IsAny<Guid>())).ReturnsAsync(null, new TimeSpan(100));
+            Repo.Setup(x => x.Delete(It.IsAny<Guid>(), false)).ReturnsAsync(null, new TimeSpan(100));
 
             var res = Service.Delete(Entity.Id);
             res.Wait();
