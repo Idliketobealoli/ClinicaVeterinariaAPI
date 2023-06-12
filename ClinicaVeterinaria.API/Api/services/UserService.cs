@@ -107,12 +107,15 @@ namespace ClinicaVeterinaria.API.Api.services
             if (user != null)
             {
                 var allPets = await PRepo.FindAll();
-                var pets = from pet in allPets
-                    where (pet.OwnerEmail == email)
-                    select pet;
-                foreach(var pet in pets)
+                if (allPets != null) 
                 {
-                    await PRepo.Delete(pet.Id, false);
+                    var pets = from pet in allPets
+                        where (pet.OwnerEmail == email)
+                        select pet;
+                    foreach(var pet in pets)
+                    {
+                        await PRepo.Delete(pet.Id, false);
+                    }
                 }
                 return new Either<UserDTO, string>(user.ToDTO());
             }
