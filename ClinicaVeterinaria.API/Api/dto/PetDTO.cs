@@ -29,7 +29,7 @@ namespace ClinicaVeterinaria.API.Api.dto
             Guid id, string name,
             string race, string species, string sex,
             string birthDate, double weight, double size,
-            HistoryDTO history,UserDTOshort ownerDTO,
+            HistoryDTO history, UserDTOshort ownerDTO,
             bool isActive
             )
         {

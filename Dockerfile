@@ -6,7 +6,6 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-ENV ASPNETCORE_ENVIRONMENT=Development
 WORKDIR /src
 COPY ["ClinicaVeterinaria.API/ClinicaVeterinaria.API.csproj", "ClinicaVeterinaria.API/"]
 RUN dotnet restore "ClinicaVeterinaria.API/ClinicaVeterinaria.API.csproj"

@@ -39,7 +39,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
                 "123456789", CipherService.Encode("uwu1234"), true);
             DTO = new(
                 "test", "testeado", "uwu@gmail.com", "123456789", true);
-            DTOShort = new("test", "testeado");
+            DTOShort = new("test", "testeado", "uwu@gmail.com");
             DTOandToken = new(DTO, "");
             List = new List<User>() { Entity };
             ListDTO = new List<UserDTO>() { DTO };

@@ -73,15 +73,18 @@
     {
         public string Name { get; set; }
         public string Surname { get; set; }
+        public string Email { get; set; }
 
         public UserDTOshort
             (
             string name,
-            string surname
+            string surname,
+            string email
             )
         {
             Name = name;
             Surname = surname;
+            Email = email;
         }
     }
 

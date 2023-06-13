@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Text;
 
 namespace ClinicaVeterinaria.API
@@ -27,9 +26,6 @@ namespace ClinicaVeterinaria.API
                     Title = "Clinica Veterinaria API",
                     Description = "An ASP.NET Core Web API for managing a veterinary clinic."
                 });
-
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
             builder.Services.AddCors(options =>
@@ -89,14 +85,9 @@ namespace ClinicaVeterinaria.API
 
             var app = builder.Build();
 
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI();
-            //}
             app.UseSwagger();
-            app.UseSwaggerUI(c => 
-                c.SwaggerEndpoint("/swagger/v1/swagger.json","myappname v1")); 
+            app.UseSwaggerUI(c =>
+                c.SwaggerEndpoint("/swagger/v1/swagger.json","myappname v1"));
 
             app.UseHttpsRedirection();
 

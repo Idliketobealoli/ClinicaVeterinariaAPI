@@ -23,7 +23,8 @@ namespace ClinicaVeterinaria.API.Api.mappers
             return new
                 (
                 user.Name,
-                user.Surname
+                user.Surname,
+                user.Email
                 );
         }
 

@@ -43,7 +43,7 @@ namespace ClinicaVeterinaria.TEST.Api.services
             History = new(Entity.Id);
             HistoryDTO = new(Entity.Id, new(), new());
             User = new("owner", "test", "uwu@gmail.com", "y", "z", true);
-            UserDTO = new("owner", "test");
+            UserDTO = new("owner", "test", "uwu@gmail.com");
             DTO = new(
                 Entity.Id, "test", "testeado", "cat",
                 "FEMALE", DateOnly.FromDateTime(DateTime.Now).ToString(), 10.0, 15.0, HistoryDTO, UserDTO, true);
