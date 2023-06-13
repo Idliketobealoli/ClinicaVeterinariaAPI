@@ -12,7 +12,7 @@ namespace ClinicaVeterinaria.API.Api.db
             vts.Wait();
             if (vts.Result == null)
             {
-                var created = vets.Create(new("admin", "admin", "admin1707@gmail.com", "620797974", CipherService.Encode("admin1234"), Role.ADMIN, "Ser administrador", true));
+                var created = vets.Create(new("admin", "admin", "admin1707@gmail.com", "620-79-7974", CipherService.Encode("admin1234"), Role.ADMIN, "Ser administrador", true));
                 created.Wait();
             }
         }

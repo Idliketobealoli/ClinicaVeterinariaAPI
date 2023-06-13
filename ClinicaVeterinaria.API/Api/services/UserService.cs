@@ -19,6 +19,7 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public UserService() { }
 
+        // Finds all users in the database and maps them to DTOs
         public virtual async Task<List<UserDTO>> FindAll()
         {
             var entities = await Repo.FindAll();
@@ -30,6 +31,7 @@ namespace ClinicaVeterinaria.API.Api.services
             return entitiesDTOs;
         }
 
+        // Finds a user in the database whose email matches the one given and maps it to DTO, or returns an error message
         public virtual async Task<Either<UserDTO, string>> FindByEmail(string email)
         {
             var user = await Repo.FindByEmail(email);
@@ -41,6 +43,7 @@ namespace ClinicaVeterinaria.API.Api.services
             else return new Either<UserDTO, string>(user.ToDTO());
         }
 
+        // Finds a user in the database whose email matches the one given and maps it to a shortened DTO, or returns an error message
         public virtual async Task<Either<UserDTOshort, string>> FindByEmailShort(string email)
         {
             var user = await Repo.FindByEmail(email);
@@ -52,6 +55,7 @@ namespace ClinicaVeterinaria.API.Api.services
             else return new Either<UserDTOshort, string>(user.ToDTOshort());
         }
 
+        // Registers a user in the database if and only if its information is valid, and returns its data and a token
         public virtual async Task<Either<UserDTOandToken, string>> Register(UserDTOregister dto, IConfiguration? config)
         {
             var userByEmail = await Repo.FindByEmail(dto.Email);
@@ -75,6 +79,7 @@ namespace ClinicaVeterinaria.API.Api.services
             }
         }
 
+        // Logs in a user in the database if and only if its information is valid, and returns its data and a token
         public virtual async Task<Either<UserDTOandToken, string>> Login(UserDTOloginOrChangePassword dto, IConfiguration? config)
         {
             var userByEmail = await Repo.FindByEmail(dto.Email);
@@ -90,6 +95,7 @@ namespace ClinicaVeterinaria.API.Api.services
             }
         }
 
+        // Lets a user change their password, if and only if its information is valid, and returns its data
         public virtual async Task<Either<UserDTO, string>> ChangePassword(UserDTOloginOrChangePassword dto)
         {
             var user = await Repo.UpdatePassword(dto.Email, CipherService.Encode(dto.Password));
@@ -101,13 +107,15 @@ namespace ClinicaVeterinaria.API.Api.services
                     ($"User with email {dto.Email} not found.");
         }
 
+        // Disables a user in the database, making it invisible to non-targeted search operations,
+        // and also disabling all its pets.
         public virtual async Task<Either<UserDTO, string>> Delete(string email)
         {
             var user = await Repo.SwitchActivity(email, false);
             if (user != null)
             {
                 var allPets = await PRepo.FindAll();
-                if (allPets != null) 
+                if (allPets != null)
                 {
                     var pets = from pet in allPets
                         where (pet.OwnerEmail == email)

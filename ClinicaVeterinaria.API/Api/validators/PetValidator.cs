@@ -3,6 +3,7 @@ using System.Net.Mail;
 
 namespace ClinicaVeterinaria.API.Api.validators
 {
+    // Extension functions whose putpose is to validate the information about Pets
     public static class PetValidator
     {
         public static string? Validate(this PetDTOcreate dto)

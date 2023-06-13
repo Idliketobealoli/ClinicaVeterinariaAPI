@@ -1,6 +1,5 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
 using ClinicaVeterinaria.API.Api.mappers;
-using ClinicaVeterinaria.API.Api.model;
 using ClinicaVeterinaria.API.Api.repositories;
 
 namespace ClinicaVeterinaria.API.Api.services
@@ -20,6 +19,7 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public HistoryService() { }
 
+        // Finds all histories in the database and maps them to DTOs
         public virtual async Task<List<HistoryDTO>> FindAll()
         {
             var entities = await HisRepo.FindAll();
@@ -31,6 +31,7 @@ namespace ClinicaVeterinaria.API.Api.services
             return entitiesDTOs;
         }
 
+        // Finds a pet's history in the database whose guid matches the one given and maps it to DTO, or returns an error message
         public virtual async Task<Either<HistoryDTO, string>> FindByPetId(Guid id)
         {
             var entity = await HisRepo.FindByPetId(id);
@@ -42,6 +43,8 @@ namespace ClinicaVeterinaria.API.Api.services
             else return new Either<HistoryDTO, string>(entity.ToDTO(VacRepo, AilRepo));
         }
 
+        // Finds a pet's history in the database whose guid matches the one given and maps it to a DTO
+        // containing only the vaccination history, or returns an error message
         public virtual async Task<Either<HistoryDTOvaccines, string>> FindByPetIdVaccinesOnly(Guid id)
         {
             var entity = await HisRepo.FindByPetId(id);
@@ -53,6 +56,8 @@ namespace ClinicaVeterinaria.API.Api.services
             else return new Either<HistoryDTOvaccines, string>(entity.ToDTOvaccines(VacRepo));
         }
 
+        // Finds a pet's history in the database whose guid matches the one given and maps it to a DTO
+        // containing only the ailment-treatment history, or returns an error message
         public virtual async Task<Either<HistoryDTOailmentTreatment, string>> FindByPetIdAilmTreatOnly(Guid id)
         {
             var entity = await HisRepo.FindByPetId(id);
@@ -64,6 +69,7 @@ namespace ClinicaVeterinaria.API.Api.services
             else return new Either<HistoryDTOailmentTreatment, string>(entity.ToDTOailmentTreatment(AilRepo));
         }
 
+        // Adds a new vaccine to a pet's medical history.
         public virtual async Task<Either<HistoryDTO, string>> AddVaccine(Guid id, VaccineDTO vaccine)
         {
             var history = await HisRepo.FindByPetId(id);
@@ -78,6 +84,7 @@ namespace ClinicaVeterinaria.API.Api.services
                     ($"History with PetId {id} not found.");
         }
 
+        // Adds a new ailment-treatment pair to a pet's medical history.
         public virtual async Task<Either<HistoryDTO, string>> AddAilmentTreatment(Guid id, AilmentTreatmentDTO ailmentTreatment)
         {
             var history = await HisRepo.FindByPetId(id);

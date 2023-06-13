@@ -9,7 +9,7 @@ namespace ClinicaVeterinaria.API.Api.services
     {
         private readonly PetRepository PetRepo;
         private readonly UserRepository UserRepo;
-        private readonly HistoryRepository HisRepo;
+        private readonly HistoryRepository HisRepo; // not needed in this version.
         private readonly VaccineRepository VacRepo;
         private readonly AilmentTreatmentRepository AilRepo;
 
@@ -28,6 +28,7 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public PetService() { }
 
+        // Finds all pets in the database and maps them to DTOs
         public virtual async Task<List<PetDTOshort>> FindAll(string? email)
         {
             var pets = await PetRepo.FindAll();
@@ -42,6 +43,7 @@ namespace ClinicaVeterinaria.API.Api.services
             return petsDTO;
         }
 
+        // Finds a pet in the database whose guid matches the one given and maps it to DTO, or returns an error message
         public virtual async Task<Either<PetDTO, string>> FindById(Guid id)
         {
             var pet = await PetRepo.FindById(id);
@@ -59,6 +61,7 @@ namespace ClinicaVeterinaria.API.Api.services
             else return new Either<PetDTO, string>(pet.ToDTO(owner, VacRepo, AilRepo));
         }
 
+        // Creates a pet in the database if and only if its information is valid, and returns its data
         public virtual async Task<Either<PetDTO, DomainError>> Create(PetDTOcreate dto)
         {
             var user = await UserRepo.FindByEmail(dto.OwnerEmail);
@@ -82,6 +85,7 @@ namespace ClinicaVeterinaria.API.Api.services
                     (new UserErrorNotFound($"Owner with email {dto.OwnerEmail} not found."));
         }
 
+        // Updates a pet in the database if and only if its information is valid, and returns its new data
         public virtual async Task<Either<PetDTO, string>> Update(PetDTOupdate dto)
         {
             var updated = await PetRepo.Update(dto);
@@ -99,10 +103,9 @@ namespace ClinicaVeterinaria.API.Api.services
                     ($"Pet with id {dto.Id} not found.");
         }
 
+        // Disables a pet in the database, making it invisible to non-targeted search operations.
         public virtual async Task<Either<PetDTO, DomainError>> Delete(Guid id)
         {
-            // esto primero porque si no despues no se encontrara
-            // historial ni vacunas
             var pet = await PetRepo.FindById(id);
             if (pet == null)
             {
@@ -115,33 +118,12 @@ namespace ClinicaVeterinaria.API.Api.services
                 return new Either<PetDTO, DomainError>
                     (new UserErrorNotFound($"User with email {pet.OwnerEmail} not found."));
             }
-            var successfullResult = pet.ToDTO(owner, VacRepo, AilRepo);
-            
-            /*
-            // borramos todas las vacunas de la mascota
-            var vaccines = await VacRepo.FindAll();
-            var filteredVaccines =
-                from vaccine in vaccines
-                where vaccine.PetId == id
-                select vaccine;
-            foreach ( var item in filteredVaccines )
-            {
-                await VacRepo.Delete(item.Id);
-            }
+            var successfulResult = pet.ToDTO(owner, VacRepo, AilRepo);
 
-            // borramos el historial de la mascota
-            var history = await HisRepo.FindByPetId(id);
-            if (history != null)
-            {
-                await HisRepo.Delete(history.Id);
-            }
-            */
-
-            // por ultimo, borramos la mascota y devolvemos el successful result
             var deleted = await PetRepo.Delete(id, false);
             if (deleted != null)
             {
-                return new Either<PetDTO, DomainError>(successfullResult);
+                return new Either<PetDTO, DomainError>(successfulResult);
             }
             else return new Either<PetDTO, DomainError>
                     (new PetErrorBadRequest($"Could not delete Pet with id {id}."));

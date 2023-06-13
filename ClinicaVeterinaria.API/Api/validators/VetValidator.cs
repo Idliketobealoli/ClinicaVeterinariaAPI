@@ -1,10 +1,10 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
-using ClinicaVeterinaria.API.Api.errors;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 
 namespace ClinicaVeterinaria.API.Api.validators
 {
+    // Extension functions whose putpose is to validate the information about Vets
     public static class VetValidator
     {
         public static string? Validate(this VetDTOregister dto)
@@ -26,9 +26,9 @@ namespace ClinicaVeterinaria.API.Api.validators
             else if (!MailAddress.TryCreate(dto.Email.Trim(), out _))
                 return "Incorrect email address expression.";
 
-            else if (Regex.IsMatch(dto.SSNumber.Trim(),
+            else if (!Regex.IsMatch(dto.SSNumber.Trim(),
                 @"^(?!0{3})(?!6{3})[0-8]\d{2}-(?!0{2})\d{2}-(?!0{4})\d{4}$")
-                ) // Un SSN valido seria 123-45-6789
+                ) // A valid SSN would be 123-45-6789
                 return "Incorrect social security number.";
 
             else if (dto.Password.Trim() != dto.RepeatPassword.Trim())

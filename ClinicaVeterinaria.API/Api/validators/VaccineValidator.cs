@@ -2,6 +2,7 @@
 
 namespace ClinicaVeterinaria.API.Api.validators
 {
+    // Extension functions whose putpose is to validate the information about Vaccines
     public static class VaccineValidator
     {
         public static string? Validate(this VaccineDTO dto)

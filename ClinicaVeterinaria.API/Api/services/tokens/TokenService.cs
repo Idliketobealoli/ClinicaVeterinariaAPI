@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ClinicaVeterinaria.API.Api.services.tokens
 {
+    // This static function will create the token for the application.
     public static class TokenService
     {
         public static string? CreateToken(IUser user, IConfiguration? config)

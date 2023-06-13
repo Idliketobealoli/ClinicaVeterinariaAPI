@@ -27,6 +27,7 @@ namespace ClinicaVeterinaria.API.Api.services
 
         public AppointmentService() { }
 
+        // Finds all appointments in the database and maps them to DTOs
         public virtual async Task<List<AppointmentDTOshort>> FindAll(string? userEmail, string? vetEmail, DateOnly? date)
         {
             var entities = await Repo.FindAll();
@@ -61,6 +62,7 @@ namespace ClinicaVeterinaria.API.Api.services
             return entitiesDTOs;
         }
 
+        // Finds an appointment in the database whose guid matches the one given and maps it to DTO, or returns an error message
         public virtual async Task<Either<AppointmentDTO, string>> FindById(Guid id)
         {
             var task = await Repo.FindById(id);
@@ -90,6 +92,7 @@ namespace ClinicaVeterinaria.API.Api.services
             }
         }
 
+        // Creates a new appointment, or returns an error message.
         public virtual async Task<Either<AppointmentDTO, DomainError>> Create(AppointmentDTOcreate dto)
         {
             if (dto.State.ToUpper() != "PENDING" &&
@@ -132,6 +135,7 @@ namespace ClinicaVeterinaria.API.Api.services
                     (new AppointmentErrorBadRequest("Incorrect data for the new appointment."));
         }
 
+        // Updates the state of the appointment with the given guid.
         public virtual async Task<Either<AppointmentDTO, DomainError>> UpdateState (Guid id, string state)
         {
             var updated = await Repo.UpdateState(id, States.FromString(state));
@@ -155,6 +159,7 @@ namespace ClinicaVeterinaria.API.Api.services
                     (updated.ToDTO(userByEmail, pet, vetByEmail));
         }
 
+        // deletes an appointment, as long as it is not being deleted the day before its starting date.
         public virtual async Task<Either<AppointmentDTO, DomainError>> Delete(Guid id)
         {
             var appointment = await Repo.FindById(id);

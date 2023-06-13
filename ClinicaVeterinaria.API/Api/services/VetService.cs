@@ -1,5 +1,4 @@
 ﻿using ClinicaVeterinaria.API.Api.dto;
-using ClinicaVeterinaria.API.Api.errors;
 using ClinicaVeterinaria.API.Api.mappers;
 using ClinicaVeterinaria.API.Api.repositories;
 using ClinicaVeterinaria.API.Api.services.bcrypt;
@@ -19,6 +18,7 @@ namespace ClinicaVeterinaria.API.Api.services
         }
         public VetService() { }
 
+        // Finds all vets in the database and maps them to DTOs
         public virtual async Task<List<VetDTO>> FindAll()
         {
             var entities = await Repo.FindAll();
@@ -30,6 +30,7 @@ namespace ClinicaVeterinaria.API.Api.services
             return entitiesDTOs;
         }
 
+        // Finds all vets in the database and maps them to DTOs for appointments
         public virtual async Task<List<VetDTOappointment>> FindAllAppointment()
         {
             var entities = await Repo.FindAll();
@@ -41,6 +42,7 @@ namespace ClinicaVeterinaria.API.Api.services
             return entitiesDTOs;
         }
 
+        // Finds all vets in the database and maps them to DTOs ordered by their number of appointments received, with said number included
         public virtual async Task<List<VetDTOstats>> FindAllForStats()
         {
             var appointments = await ARepo.FindAll();
@@ -54,6 +56,7 @@ namespace ClinicaVeterinaria.API.Api.services
             return entitiesDTOs.OrderByDescending(e => e.AppointmentAmount).ToList();
         }
 
+        // Finds a vet in the database whose email matches the one given and maps it to DTO, or returns an error message
         public virtual async Task<Either<VetDTO, string>> FindByEmail(string email)
         {
             var user = await Repo.FindByEmail(email);
@@ -66,6 +69,7 @@ namespace ClinicaVeterinaria.API.Api.services
                     (user.ToDTO());
         }
 
+        // Finds a vet in the database whose email matches the one given and maps it to a shortened DTO, or returns an error message
         public virtual async Task<Either<VetDTOshort, string>> FindByEmailShort(string email)
         {
             var user = await Repo.FindByEmail(email);
@@ -78,6 +82,7 @@ namespace ClinicaVeterinaria.API.Api.services
                     (user.ToDTOshort());
         }
 
+        // Finds a vet in the database whose email matches the one given and maps it to an appointment DTO, or returns an error message
         public virtual async Task<Either<VetDTOappointment, string>> FindByEmailAppointment(string email)
         {
             var user = await Repo.FindByEmail(email);
@@ -88,6 +93,7 @@ namespace ClinicaVeterinaria.API.Api.services
                     (user.ToDTOappointment());
         }
 
+        // Registers a vet in the database if and only if its information is valid, and returns its data and a token
         public virtual async Task<Either<VetDTOandToken, string>> Register(VetDTOregister dto, IConfiguration? config)
         {
             if (dto.Role.ToUpper() != "VET" && dto.Role.ToUpper() != "ADMIN")
@@ -117,6 +123,7 @@ namespace ClinicaVeterinaria.API.Api.services
             }
         }
 
+        // Logs in a vet in the database if and only if its information is valid, and returns its data and a token
         public virtual async Task<Either<VetDTOandToken, string>> Login(VetDTOloginOrChangePassword dto, IConfiguration? config)
         {
             var userByEmail = await Repo.FindByEmail(dto.Email);
@@ -134,6 +141,7 @@ namespace ClinicaVeterinaria.API.Api.services
             }
         }
 
+        // Lets a vet change their password, if and only if its information is valid, and returns its data
         public virtual async Task<Either<VetDTO, string>> ChangePassword(VetDTOloginOrChangePassword dto)
         {
             var user = await Repo.UpdatePassword(dto.Email, CipherService.Encode(dto.Password));
@@ -145,6 +153,7 @@ namespace ClinicaVeterinaria.API.Api.services
                     ($"Vet with email {dto.Email} not found.");
         }
 
+        // Disables a vet in the database, making it invisible to non-targeted search operations.
         public virtual async Task<Either<VetDTO, string>> Delete(string email)
         {
             var user = await Repo.SwitchActivity(email, false);
